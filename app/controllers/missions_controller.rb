@@ -41,6 +41,15 @@ class MissionsController < ApplicationController
     end
   end
 
+  def qbit_chat
+    reply = QbitTutor.reply(mission: @mission, question: params[:message], history: params[:history])
+    render json: { reply: reply, model: QbitTutor::MODEL }
+  rescue ArgumentError => error
+    render json: { error: error.message }, status: :unprocessable_content
+  rescue QbitTutor::UnavailableError => error
+    render json: { error: error.message }, status: :service_unavailable
+  end
+
   private
 
   def set_mission

@@ -21,6 +21,8 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", "Qubit Basics"
     assert_select "h3", "Measure in Z"
+    assert_select "[data-controller='qbit-chat']"
+    assert_select "img[src='/images/qbit.png'][alt*='Q-Bit']"
     assert_select "p", /Prepare \|0⟩ to reveal this explanation/
   end
 
@@ -36,6 +38,27 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h3", "A qubit can be predictable in one basis and random in another"
     assert_select "p", /not a classical coin flip/
+  end
+
+  test "returns a Q-Bit answer for the current mission as JSON" do
+    with_qbit_reply("Prepare |1⟩ applies X to |0⟩.") do
+      post qbit_chat_mission_path(@qubit), params: { message: "What does Prepare |1⟩ do?" }, as: :json
+    end
+
+    assert_response :success
+    assert_equal "Prepare |1⟩ applies X to |0⟩.", response.parsed_body.fetch("reply")
+    assert_equal "llama3.2:latest", response.parsed_body.fetch("model")
+  end
+
+  private
+
+  def with_qbit_reply(reply)
+    singleton_class = QbitTutor.singleton_class
+    original_reply = singleton_class.instance_method(:reply)
+    singleton_class.define_method(:reply) { |**| reply }
+    yield
+  ensure
+    singleton_class.define_method(:reply, original_reply)
   end
 
   test "prevents direct access to a locked mission" do

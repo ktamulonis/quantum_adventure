@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     member do
       get :quiz
       post :submit_quiz
+      post :qbit_chat
     end
   end
   resources :passwords, param: :token

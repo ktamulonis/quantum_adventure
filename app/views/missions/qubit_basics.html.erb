@@ -53,5 +53,6 @@
       <% end %>
     </div>
   </section>
+  <%= render "missions/qbit_tutor", mission: @mission %>
   <%= link_to "Take the Qubit Basics quiz", quiz_mission_path(@mission), class: "inline-block rounded bg-indigo-700 px-5 py-3 font-bold text-white" %>
 </section>
