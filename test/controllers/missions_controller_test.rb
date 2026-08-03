@@ -20,6 +20,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", "Qubit Basics"
+    assert_select "img[src='/images/mission-qubit-basics.png'][alt*='Bloch sphere']"
     assert_select "h3", "Measure in Z"
     assert_select "[data-controller='qbit-chat']"
     assert_select "img[src='/images/qbit.png'][alt*='Q-Bit']"
