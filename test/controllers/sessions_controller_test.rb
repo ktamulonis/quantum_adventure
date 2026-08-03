@@ -5,7 +5,11 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "new" do
     get new_session_path
+
     assert_response :success
+    assert_select "h1", "Continue your adventure"
+    assert_select "img[src='/images/dr-q-welcome.png'][alt*='Dr. Q']"
+    assert_select "p", /Welcome back to the Quantum Lab/
   end
 
   test "create with valid credentials" do
