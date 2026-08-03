@@ -42,7 +42,7 @@ class MissionsController < ApplicationController
   end
 
   def qbit_chat
-    reply = QbitTutor.reply(mission: @mission, question: params[:message], history: params[:history])
+    reply = QbitTutor.reply(mission: @mission, question: params[:message], history: qbit_history)
     render json: { reply: reply, model: QbitTutor::MODEL }
   rescue ArgumentError => error
     render json: { error: error.message }, status: :unprocessable_content
@@ -81,5 +81,13 @@ class MissionsController < ApplicationController
     session[:qubit_basics_clues] ||= []
     session[:qubit_basics_clues] |= [ @lesson.preset ]
     @unlocked_qubit_clues = session[:qubit_basics_clues]
+  end
+
+  def qbit_history
+    Array(params[:history]).filter_map do |entry|
+      next unless entry.respond_to?(:permit)
+
+      entry.permit(:role, :content).to_h
+    end
   end
 end

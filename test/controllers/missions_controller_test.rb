@@ -42,7 +42,10 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
 
   test "returns a Q-Bit answer for the current mission as JSON" do
     with_qbit_reply("Prepare |1⟩ applies X to |0⟩.") do
-      post qbit_chat_mission_path(@qubit), params: { message: "What does Prepare |1⟩ do?" }, as: :json
+      post qbit_chat_mission_path(@qubit), params: {
+        message: "What does Prepare |1⟩ do?",
+        history: [ { role: "user", content: "hello" } ]
+      }, as: :json
     end
 
     assert_response :success
