@@ -46,6 +46,10 @@
             <div class="mb-3 flex h-40 w-full items-center justify-center overflow-hidden">
               <%= image_tag "/images/mission-grovers-search.png", alt: "Grover's search marked state", class: "h-full w-full scale-150 object-contain object-center" %>
             </div>
+          <% elsif mission.slug == "noise-hardware" %>
+            <div class="mb-3 flex h-40 w-full items-center justify-center overflow-hidden">
+              <%= image_tag "/images/mission-noise-hardware.png", alt: "Ideal simulation compared with noisy hardware", class: "h-full w-full scale-150 object-contain object-center" %>
+            </div>
           <% end %>
           <p class="font-bold">Mission <%= mission.number %></p><h3 class="text-lg font-black"><%= mission.title %></h3><p class="mt-2 text-sm"><%= mission.summary %></p>
           <p class="mt-3 text-sm font-bold"><%= completed ? 'Completed' : unlocked && mission.status == 'playable' ? 'Ready' : 'Locked / coming soon' %></p><% if unlocked && !completed %><%= link_to "Start", mission_path(mission.slug), class: "mt-3 inline-block underline" %><% end %>
