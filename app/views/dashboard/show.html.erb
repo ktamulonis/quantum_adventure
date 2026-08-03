@@ -22,6 +22,10 @@
             <%= image_tag "/images/mission-qubit-basics.png", alt: "Qubit Basics Bloch sphere", class: "mb-3 h-28 w-full rounded-lg object-cover object-center" %>
           <% elsif mission.slug == "superposition" %>
             <%= image_tag "/images/mission-superposition.png", alt: "Superposition Bloch sphere", class: "mb-3 h-28 w-full rounded-lg object-cover object-center" %>
+          <% elsif mission.slug == "entanglement" %>
+            <%= image_tag "/images/mission-entanglement.png", alt: "Entangled qubits", class: "mb-3 h-28 w-full rounded-lg object-cover object-center" %>
+          <% elsif mission.slug == "bell-test" %>
+            <%= image_tag "/images/mission-bell-test.png", alt: "Bell test measurement stations", class: "mb-3 h-28 w-full rounded-lg object-cover object-center" %>
           <% end %>
           <p class="font-bold">Mission <%= mission.number %></p><h3 class="text-lg font-black"><%= mission.title %></h3><p class="mt-2 text-sm"><%= mission.summary %></p>
           <p class="mt-3 text-sm font-bold"><%= completed ? 'Completed' : unlocked && mission.status == 'playable' ? 'Ready' : 'Locked / coming soon' %></p><% if unlocked && !completed %><%= link_to "Start", mission_path(mission.slug), class: "mt-3 inline-block underline" %><% end %>

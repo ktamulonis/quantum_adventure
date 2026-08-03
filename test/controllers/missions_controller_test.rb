@@ -102,8 +102,10 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     get mission_path(entanglement), params: { shots: 100 }
     assert_response :success
     assert_select "h1", "Entanglement"
+    assert_select "img[src='/images/mission-entanglement.png'][alt='Illustration of two entangled qubits']"
     get mission_path(bell_test), params: { shots: 500 }
     assert_response :success
     assert_select "h1", "Bell Test"
+    assert_select "img[src='/images/mission-bell-test.png'][alt='Illustration of a Bell test between two measurement stations']"
   end
 end
