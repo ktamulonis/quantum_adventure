@@ -14,6 +14,12 @@ class MissionsController < ApplicationController
     when "superposition"
       @lesson = SuperpositionLesson.run(preset: params.fetch(:preset, "plus"))
       render :superposition
+    when "entanglement"
+      @lesson = EntanglementLesson.run(shots: mission_shots, seed: mission_seed)
+      render :entanglement
+    when "bell-test"
+      @lesson = BellTestLesson.run(shots: mission_shots, seed: mission_seed)
+      render :bell_test
     else
       redirect_to missions_path, alert: "This mission is preparing for launch."
     end
@@ -48,5 +54,16 @@ class MissionsController < ApplicationController
 
   def quiz_answers
     params.fetch(:answers, {}).permit!.to_h
+  end
+
+  def mission_shots
+    value = Integer(params.fetch(:shots, 500))
+    raise ArgumentError, "shots must be between 100 and 10000" unless value.between?(100, 10_000)
+
+    value
+  end
+
+  def mission_seed
+    Integer(params.fetch(:seed, 42))
   end
 end
