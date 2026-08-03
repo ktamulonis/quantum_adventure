@@ -71,6 +71,16 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to missions_path
   end
 
+  test "renders the Superposition mission artwork after Mission 1 is complete" do
+    MissionCompletion.create!(user: @user, mission: @qubit, xp_awarded: 100, completed_at: Time.current)
+
+    get mission_path(@superposition)
+
+    assert_response :success
+    assert_select "h1", "Superposition"
+    assert_select "img[src='/images/mission-superposition.png'][alt*='plus superposition']"
+  end
+
   test "submits a quiz and unlocks the next mission" do
     answers = @qubit.quiz_questions.to_h { |question| [ question.id.to_s, "0" ] }
 
