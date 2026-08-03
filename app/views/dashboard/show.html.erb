@@ -20,27 +20,27 @@
         <article class="rounded-xl border-2 border-slate-900 p-4 <%= completed ? 'bg-emerald-100' : unlocked && mission.status == 'playable' ? 'bg-amber-100' : 'bg-slate-200 opacity-70' %>">
           <% if mission.slug == "qubit-basics" %>
             <div class="mb-3 flex h-40 w-full items-center justify-center overflow-hidden">
-              <%= image_tag "/images/mission-qubit-basics.png", alt: "Qubit Basics Bloch sphere", class: "h-full w-full scale-125 object-contain object-center" %>
+              <%= image_tag "/images/mission-qubit-basics.png", alt: "Qubit Basics Bloch sphere", class: "h-full w-full scale-150 object-contain object-center" %>
             </div>
           <% elsif mission.slug == "superposition" %>
             <div class="mb-3 flex h-40 w-full items-center justify-center overflow-hidden">
-              <%= image_tag "/images/mission-superposition.png", alt: "Superposition Bloch sphere", class: "h-full w-full scale-125 object-contain object-center" %>
+              <%= image_tag "/images/mission-superposition.png", alt: "Superposition Bloch sphere", class: "h-full w-full scale-150 object-contain object-center" %>
             </div>
           <% elsif mission.slug == "entanglement" %>
             <div class="mb-3 flex h-40 w-full items-center justify-center overflow-hidden">
-              <%= image_tag "/images/mission-entanglement.png", alt: "Entangled qubits", class: "h-full w-full scale-125 object-contain object-center" %>
+              <%= image_tag "/images/mission-entanglement.png", alt: "Entangled qubits", class: "h-full w-full scale-150 object-contain object-center" %>
             </div>
           <% elsif mission.slug == "bell-test" %>
             <div class="mb-3 flex h-40 w-full items-center justify-center overflow-hidden">
-              <%= image_tag "/images/mission-bell-test.png", alt: "Bell test measurement stations", class: "h-full w-full scale-125 object-contain object-center" %>
+              <%= image_tag "/images/mission-bell-test.png", alt: "Bell test measurement stations", class: "h-full w-full scale-150 object-contain object-center" %>
             </div>
           <% elsif mission.slug == "teleportation" %>
             <div class="mb-3 flex h-40 w-full items-center justify-center overflow-hidden">
-              <%= image_tag "/images/mission-teleportation.png", alt: "Quantum teleportation between two learning robots", class: "h-full w-full scale-125 object-contain object-center" %>
+              <%= image_tag "/images/mission-teleportation.png", alt: "Quantum teleportation between two learning robots", class: "h-full w-full scale-150 object-contain object-center" %>
             </div>
           <% elsif mission.slug == "interference" %>
             <div class="mb-3 flex h-40 w-full items-center justify-center overflow-hidden">
-              <%= image_tag "/images/mission-interference.png", alt: "Interference between two quantum wave paths", class: "h-full w-full scale-125 object-contain object-center" %>
+              <%= image_tag "/images/mission-interference.png", alt: "Interference between two quantum wave paths", class: "h-full w-full scale-150 object-contain object-center" %>
             </div>
           <% end %>
           <p class="font-bold">Mission <%= mission.number %></p><h3 class="text-lg font-black"><%= mission.title %></h3><p class="mt-2 text-sm"><%= mission.summary %></p>
