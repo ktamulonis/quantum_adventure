@@ -5,7 +5,7 @@
       <h1 class="text-4xl font-black">Entanglement</h1>
       <p class="mt-3 max-w-3xl text-lg">A Bell pair is a two-qubit state. Each measurement is random, but matching measurements reveal correlations that neither qubit has alone.</p>
     </div>
-    <%= image_tag "/images/mission-entanglement.png", alt: "Illustration of two entangled qubits", class: "mx-auto h-44 w-44 rounded-xl object-cover" %>
+    <%= image_tag "/images/mission-entanglement.png", alt: "Illustration of two entangled qubits", class: "mx-auto h-44 w-44 rounded-xl bg-slate-100 object-contain" %>
   </header>
   <%= form_with url: mission_path(@mission), method: :get, class: "flex flex-wrap gap-3" do |form| %><%= form.number_field :shots, value: params.fetch(:shots, 500), min: 100, max: 10_000, class: "rounded border-2 border-slate-900 p-2" %><%= form.submit "Run Bell pair", class: "rounded bg-indigo-700 px-4 py-2 font-bold text-white" %><% end %>
   <section class="rounded-xl border-2 border-slate-900 bg-white p-5"><h2 class="text-2xl font-black">Phi-plus Bell pair</h2><pre class="mt-3 rounded bg-slate-100 p-3"><%= @lesson.circuit.draw %></pre><p class="mt-3">Concurrence: <strong><%= format('%.3f', @lesson.statevector.concurrence) %></strong> · Entangled: <strong><%= @lesson.statevector.entangled? ? 'Yes' : 'No' %></strong></p><div class="mt-4 grid gap-3 md:grid-cols-4"><% @lesson.statevector.probabilities.each do |basis, probability| %><div class="rounded border p-3"><p class="font-bold">|<%= basis %>⟩</p><p><%= format('%.1f%%', probability * 100) %></p></div><% end %></div></section>
