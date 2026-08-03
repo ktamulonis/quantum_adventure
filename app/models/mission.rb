@@ -9,6 +9,8 @@ class Mission < ApplicationRecord
 
   scope :roadmap, -> { order(:number) }
 
+  def to_param = slug
+
   def unlocked_for?(user)
     prerequisite_number.nil? || user.mission_completions.joins(:mission).exists?(missions: { number: prerequisite_number })
   end

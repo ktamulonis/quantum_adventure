@@ -2,6 +2,12 @@ Rails.application.routes.draw do
   root "dashboard#show"
   resource :registration, only: %i[new create]
   resource :session
+  resources :missions, param: :slug, only: %i[index show] do
+    member do
+      get :quiz
+      post :submit_quiz
+    end
+  end
   resources :passwords, param: :token
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

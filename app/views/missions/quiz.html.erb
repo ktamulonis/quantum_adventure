@@ -1,0 +1,7 @@
+<section class="mx-auto w-full max-w-3xl rounded-xl border-2 border-slate-900 bg-white p-6">
+  <p class="font-bold uppercase text-indigo-700"><%= @mission.title %> assessment</p><h1 class="mt-2 text-3xl font-black">Three questions to earn your badge</h1><p class="mt-2">Pass with at least 70%. You can retry as often as you need.</p>
+  <%= form_with url: submit_quiz_mission_path(@mission), method: :post, class: "mt-6 space-y-6" do |form| %>
+    <% @questions.each_with_index do |question, index| %><fieldset class="border-t pt-4"><legend class="font-bold"><%= index + 1 %>. <%= question.prompt %></legend><% question.options.each_with_index do |option, option_index| %><label class="mt-2 block"><%= radio_button_tag "answers[#{question.id}]", option_index, false, required: true %> <%= option %></label><% end %></fieldset><% end %>
+    <%= form.submit "Submit answers", class: "rounded bg-indigo-700 px-5 py-3 font-bold text-white" %>
+  <% end %>
+</section>
