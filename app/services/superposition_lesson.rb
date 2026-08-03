@@ -1,8 +1,8 @@
 class SuperpositionLesson
   PRESETS = {
-    "plus" => ["|+⟩", %i[h]],
-    "minus" => ["|−⟩", %i[h z]],
-    "plus_i" => ["|+i⟩", %i[h s]]
+    "plus" => [ "|+⟩", %i[h] ],
+    "minus" => [ "|−⟩", %i[h z] ],
+    "plus_i" => [ "|+i⟩", %i[h s] ]
   }.freeze
 
   Result = Struct.new(:preset, :state_name, :circuit, :statevector, keyword_init: true)

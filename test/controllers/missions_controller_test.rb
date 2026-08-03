@@ -9,7 +9,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
                                      xp_reward: 150, badge_name: "Superposition Master", prerequisite_number: 1,
                                      status: "playable")
     3.times do |index|
-      QuizQuestion.create!(mission: @qubit, prompt: "Question #{index}", options: ["A", "B"], correct_option: 0,
+      QuizQuestion.create!(mission: @qubit, prompt: "Question #{index}", options: [ "A", "B" ], correct_option: 0,
                            explanation: "Because")
     end
     sign_in_as(@user)
@@ -30,7 +30,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "submits a quiz and unlocks the next mission" do
-    answers = @qubit.quiz_questions.to_h { |question| [question.id.to_s, "0"] }
+    answers = @qubit.quiz_questions.to_h { |question| [ question.id.to_s, "0" ] }
 
     post submit_quiz_mission_path(@qubit), params: { answers: answers }
 

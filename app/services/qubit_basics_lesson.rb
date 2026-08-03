@@ -1,8 +1,8 @@
 class QubitBasicsLesson
   PRESETS = {
-    "zero" => ["|0⟩", []],
-    "one" => ["|1⟩", [:x]],
-    "plus" => ["|+⟩", [:h]]
+    "zero" => [ "|0⟩", [] ],
+    "one" => [ "|1⟩", [ :x ] ],
+    "plus" => [ "|+⟩", [ :h ] ]
   }.freeze
 
   Result = Struct.new(:preset, :state_name, :circuit, :statevector, keyword_init: true)
