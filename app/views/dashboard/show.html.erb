@@ -19,7 +19,7 @@
         <% completed = Current.user.completed?(mission); unlocked = mission.unlocked_for?(Current.user) %>
         <article class="rounded-xl border-2 border-slate-900 p-4 <%= completed ? 'bg-emerald-100' : unlocked && mission.status == 'playable' ? 'bg-amber-100' : 'bg-slate-200 opacity-70' %>">
           <% if mission.slug == "qubit-basics" %>
-            <%= image_tag "/images/mission-qubit-basics.png", alt: "Qubit Basics Bloch sphere", class: "mb-3 h-28 w-full rounded-lg border-2 border-slate-900 object-cover object-center" %>
+            <%= image_tag "/images/mission-qubit-basics.png", alt: "Qubit Basics Bloch sphere", class: "mb-3 h-28 w-full rounded-lg object-cover object-center" %>
           <% end %>
           <p class="font-bold">Mission <%= mission.number %></p><h3 class="text-lg font-black"><%= mission.title %></h3><p class="mt-2 text-sm"><%= mission.summary %></p>
           <p class="mt-3 text-sm font-bold"><%= completed ? 'Completed' : unlocked && mission.status == 'playable' ? 'Ready' : 'Locked / coming soon' %></p><% if unlocked && !completed %><%= link_to "Start", mission_path(mission.slug), class: "mt-3 inline-block underline" %><% end %>
