@@ -1,0 +1,13 @@
+<section class="mx-auto max-w-md rounded-2xl border-4 border-slate-900 bg-amber-50 p-8 shadow-lg">
+  <h1 class="text-3xl font-black uppercase">Join Quantum Adventure</h1>
+  <p class="mt-2 text-slate-700">Create your explorer profile to keep XP, badges, and mission progress.</p>
+  <%= form_with model: @user, class: "mt-6 space-y-4" do |form| %>
+    <% if @user.errors.any? %><div class="rounded bg-rose-100 p-3 text-rose-800"><%= @user.errors.full_messages.to_sentence %></div><% end %>
+    <%= form.text_field :display_name, required: true, placeholder: "Explorer name", class: "w-full rounded border-2 border-slate-700 p-3" %>
+    <%= form.email_field :email_address, required: true, placeholder: "Email", class: "w-full rounded border-2 border-slate-700 p-3" %>
+    <%= form.password_field :password, required: true, placeholder: "Password", class: "w-full rounded border-2 border-slate-700 p-3" %>
+    <%= form.password_field :password_confirmation, required: true, placeholder: "Confirm password", class: "w-full rounded border-2 border-slate-700 p-3" %>
+    <%= form.submit "Begin adventure", class: "w-full rounded bg-indigo-700 px-4 py-3 font-bold text-white" %>
+  <% end %>
+  <p class="mt-4 text-sm">Already enrolled? <%= link_to "Sign in", new_session_path, class: "underline" %></p>
+</section>

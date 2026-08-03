@@ -1,0 +1,27 @@
+<section class="w-full space-y-8">
+  <header class="rounded-3xl border-4 border-slate-900 bg-indigo-950 p-8 text-amber-100 shadow-xl">
+    <p class="font-bold uppercase tracking-widest text-amber-300">Quantum Lab briefing</p>
+    <h1 class="mt-2 text-5xl font-black uppercase">Quantum Adventure</h1>
+    <p class="mt-3 max-w-2xl text-lg">Welcome, <%= Current.user.display_name %>. Dr. Q and Q-Bot are ready to guide you through the quantum world.</p>
+  </header>
+
+  <section class="grid gap-4 md:grid-cols-4">
+    <div class="rounded-xl border-2 border-slate-900 bg-amber-100 p-4"><p class="text-sm font-bold uppercase">Level</p><p class="text-3xl font-black"><%= Current.user.level %> Explorer</p></div>
+    <div class="rounded-xl border-2 border-slate-900 bg-sky-100 p-4"><p class="text-sm font-bold uppercase">XP points</p><p class="text-3xl font-black"><%= @xp %></p><p><%= @next_threshold ? "Next level at #{@next_threshold}" : "Quantum Master" %></p></div>
+    <div class="rounded-xl border-2 border-slate-900 bg-violet-100 p-4"><p class="text-sm font-bold uppercase">Badges</p><p class="text-3xl font-black"><%= Current.user.user_badges.count %> / 10</p></div>
+    <div class="rounded-xl border-2 border-slate-900 bg-emerald-100 p-4"><p class="text-sm font-bold uppercase">Missions complete</p><p class="text-3xl font-black"><%= Current.user.mission_completions.count %> / 10</p></div>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-black uppercase">Mission roadmap</h2>
+    <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+      <% @missions.each do |mission| %>
+        <% completed = Current.user.completed?(mission); unlocked = mission.unlocked_for?(Current.user) %>
+        <article class="rounded-xl border-2 border-slate-900 p-4 <%= completed ? 'bg-emerald-100' : unlocked && mission.status == 'playable' ? 'bg-amber-100' : 'bg-slate-200 opacity-70' %>">
+          <p class="font-bold">Mission <%= mission.number %></p><h3 class="text-lg font-black"><%= mission.title %></h3><p class="mt-2 text-sm"><%= mission.summary %></p>
+          <p class="mt-3 text-sm font-bold"><%= completed ? 'Completed' : unlocked && mission.status == 'playable' ? 'Ready' : 'Locked / coming soon' %></p>
+        </article>
+      <% end %>
+    </div>
+  </section>
+</section>
