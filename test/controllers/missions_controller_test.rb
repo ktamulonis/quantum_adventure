@@ -21,6 +21,21 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", "Qubit Basics"
     assert_select "h3", "Measure in Z"
+    assert_select "p", /Prepare \|0⟩ to reveal this explanation/
+  end
+
+  test "unlocks a plain-language clue for each prepared qubit state" do
+    get mission_path(@qubit), params: { preset: "one" }
+
+    assert_response :success
+    assert_select "h3", "The X gate is the quantum bit flip"
+    assert_select "p", /Z measurement returns 1 with certainty/
+
+    get mission_path(@qubit), params: { preset: "plus" }
+
+    assert_response :success
+    assert_select "h3", "A qubit can be predictable in one basis and random in another"
+    assert_select "p", /not a classical coin flip/
   end
 
   test "prevents direct access to a locked mission" do

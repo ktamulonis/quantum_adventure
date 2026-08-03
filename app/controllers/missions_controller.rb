@@ -10,6 +10,7 @@ class MissionsController < ApplicationController
     case @mission.slug
     when "qubit-basics"
       @lesson = QubitBasicsLesson.run(preset: params.fetch(:preset, "zero"))
+      unlock_qubit_clue if params[:preset].present?
       render :qubit_basics
     when "superposition"
       @lesson = SuperpositionLesson.run(preset: params.fetch(:preset, "plus"))
@@ -65,5 +66,11 @@ class MissionsController < ApplicationController
 
   def mission_seed
     Integer(params.fetch(:seed, 42))
+  end
+
+  def unlock_qubit_clue
+    session[:qubit_basics_clues] ||= []
+    session[:qubit_basics_clues] |= [ @lesson.preset ]
+    @unlocked_qubit_clues = session[:qubit_basics_clues]
   end
 end
