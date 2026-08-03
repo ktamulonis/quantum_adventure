@@ -16,6 +16,8 @@
           <%= image_tag "/images/mission-teleportation.png", alt: "Quantum teleportation between two learning robots", class: "mb-3 h-48 w-full object-contain object-center" %>
         <% elsif mission.slug == "interference" %>
           <%= image_tag "/images/mission-interference.png", alt: "Interference between two quantum wave paths", class: "mb-3 h-48 w-full object-contain object-center" %>
+        <% elsif mission.slug == "grovers-search" %>
+          <%= image_tag "/images/mission-grovers-search.png", alt: "Grover's search marked state", class: "mb-3 h-48 w-full object-contain object-center" %>
         <% end %>
         <p class="font-bold">Mission <%= mission.number %></p><h2 class="text-2xl font-black"><%= mission.title %></h2><p class="mt-2"><%= mission.summary %></p>
         <% if unlocked %><%= link_to "Open mission", mission_path(mission.slug), class: "mt-4 inline-block rounded bg-indigo-700 px-4 py-2 font-bold text-white" %><% else %><p class="mt-4 font-bold">Locked / coming soon</p><% end %>
