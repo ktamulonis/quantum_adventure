@@ -79,6 +79,8 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", "Superposition"
     assert_select "img[src='/images/mission-superposition.png'][alt*='plus superposition']"
+    assert_select "turbo-frame#superposition-experiment"
+    assert_select "a[data-turbo-frame='superposition-experiment']", SuperpositionLesson::PRESETS.length
   end
 
   test "shows per-question stars and requires every correct answer to unlock the next mission" do
