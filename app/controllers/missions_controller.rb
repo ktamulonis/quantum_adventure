@@ -30,15 +30,16 @@ class MissionsController < ApplicationController
 
   def quiz
     @questions = @mission.quiz_questions.order(:id)
+    @submitted_answers = {}
   end
 
   def submit_quiz
     result = MissionQuizGrader.call(user: Current.user, mission: @mission, answers: quiz_answers)
-    if result.passed?
-      redirect_to root_path, notice: "Mission complete! You earned #{@mission.xp_reward} XP and the #{@mission.badge_name} badge."
-    else
-      redirect_to quiz_mission_path(@mission), alert: "#{result.attempt.score_percent}% — review the lesson and try again."
-    end
+    @questions = @mission.quiz_questions.order(:id)
+    @attempt = result.attempt
+    @submitted_answers = @attempt.answers
+
+    render :quiz, status: result.passed? ? :ok : :unprocessable_content
   end
 
   def qbit_chat

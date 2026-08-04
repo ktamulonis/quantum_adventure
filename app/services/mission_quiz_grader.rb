@@ -1,6 +1,4 @@
 class MissionQuizGrader
-  PASSING_PERCENT = 70
-
   Result = Struct.new(:attempt, :completion, :badge, keyword_init: true) do
     def passed? = attempt.passed?
   end
@@ -10,7 +8,7 @@ class MissionQuizGrader
     correct_count = questions.count do |question|
       answers.fetch(question.id.to_s, "").to_i == question.correct_option
     end
-    passed = questions.any? && correct_count.fdiv(questions.count) * 100 >= PASSING_PERCENT
+    passed = questions.any? && correct_count == questions.count
     attempt = user.quiz_attempts.create!(mission: mission, answers: answers, correct_count: correct_count,
                                          question_count: questions.count, passed: passed)
     completion = badge = nil

@@ -30,4 +30,17 @@ class MissionQuizGraderTest < ActiveSupport::TestCase
     assert_equal 0, @user.total_xp
     assert_empty @user.user_badges
   end
+
+  test "requires every answer before awarding completion" do
+    answers = @questions.each_with_index.to_h do |question, index|
+      [ question.id.to_s, index.zero? ? "1" : "0" ]
+    end
+
+    result = MissionQuizGrader.call(user: @user, mission: @mission, answers: answers)
+
+    refute result.passed?
+    assert_equal 2, result.attempt.correct_count
+    assert_equal 0, @user.total_xp
+    assert_empty @user.mission_completions
+  end
 end

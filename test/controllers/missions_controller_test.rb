@@ -81,12 +81,27 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "img[src='/images/mission-superposition.png'][alt*='plus superposition']"
   end
 
-  test "submits a quiz and unlocks the next mission" do
+  test "shows per-question stars and requires every correct answer to unlock the next mission" do
+    incorrect_answers = @qubit.quiz_questions.each_with_index.to_h do |question, index|
+      [ question.id.to_s, index.zero? ? "1" : "0" ]
+    end
+
+    post submit_quiz_mission_path(@qubit), params: { answers: incorrect_answers }
+
+    assert_response :unprocessable_content
+    assert_select "[aria-label='Quiz feedback']"
+    assert_select "fieldset", 3
+    assert_select "span", "★"
+    assert_select "span", "☆"
+    refute @superposition.unlocked_for?(@user)
+
     answers = @qubit.quiz_questions.to_h { |question| [ question.id.to_s, "0" ] }
 
     post submit_quiz_mission_path(@qubit), params: { answers: answers }
 
-    assert_redirected_to root_path
+    assert_response :success
+    assert_select "[aria-label='Mission complete']"
+    assert_select "p", /All 3 answers are correct/
     assert @superposition.unlocked_for?(@user)
   end
 

@@ -1,7 +1,47 @@
 <section class="mx-auto w-full max-w-3xl rounded-xl border-2 border-slate-900 bg-white p-6">
-  <p class="font-bold uppercase text-indigo-700"><%= @mission.title %> assessment</p><h1 class="mt-2 text-3xl font-black">Three questions to earn your badge</h1><p class="mt-2">Pass with at least 70%. You can retry as often as you need.</p>
+  <p class="font-bold uppercase text-indigo-700"><%= @mission.title %> assessment</p>
+  <h1 class="mt-2 text-3xl font-black">Three questions to earn your badge</h1>
+  <p class="mt-2">Answer every question correctly to complete this mission. You can retry as often as you need.</p>
+
+  <% if @attempt %>
+    <% if @attempt.passed? %>
+      <section class="mt-5 rounded-xl border-2 border-amber-300 bg-amber-50 p-4" aria-label="Mission complete">
+        <p class="text-2xl text-amber-300" aria-hidden="true">★★★</p>
+        <h2 class="mt-1 text-xl font-black">Mission complete!</h2>
+        <p class="mt-1">All <%= @attempt.question_count %> answers are correct. You earned <%= @mission.xp_reward %> XP and the <%= @mission.badge_name %> badge.</p>
+      </section>
+    <% else %>
+      <section class="mt-5 rounded-xl border-2 border-slate-900 bg-slate-100 p-4" aria-label="Quiz feedback">
+        <p class="text-2xl" aria-label="<%= @attempt.correct_count %> correct out of <%= @attempt.question_count %>">
+          <% @attempt.question_count.times do |index| %><span class="<%= index < @attempt.correct_count ? 'text-amber-300' : 'text-gray-400' %>"><%= index < @attempt.correct_count ? '★' : '☆' %></span><% end %>
+        </p>
+        <p class="mt-1 font-bold"><%= @attempt.correct_count %> of <%= @attempt.question_count %> answers are correct. Review the gray-star questions and try again.</p>
+      </section>
+    <% end %>
+  <% end %>
+
   <%= form_with url: submit_quiz_mission_path(@mission), method: :post, class: "mt-6 space-y-6" do |form| %>
-    <% @questions.each_with_index do |question, index| %><fieldset class="border-t pt-4"><legend class="font-bold"><%= index + 1 %>. <%= question.prompt %></legend><% question.options.each_with_index do |option, option_index| %><label class="mt-2 block"><%= radio_button_tag "answers[#{question.id}]", option_index, false, required: true %> <%= option %></label><% end %></fieldset><% end %>
+    <% @questions.each_with_index do |question, index| %>
+      <% correct = @attempt && @submitted_answers.fetch(question.id.to_s, "").to_i == question.correct_option %>
+      <fieldset class="border-t pt-4">
+        <legend class="font-bold"><%= index + 1 %>. <%= question.prompt %></legend>
+        <% if @attempt %>
+          <p class="mt-2 font-bold <%= correct ? 'text-amber-300' : 'text-gray-500' %>">
+            <span aria-hidden="true"><%= correct ? '★' : '☆' %></span>
+            <%= correct ? 'Correct — great investigation!' : 'Not yet — revisit this lesson clue and try again.' %>
+          </p>
+        <% end %>
+        <% question.options.each_with_index do |option, option_index| %>
+          <label class="mt-2 block">
+            <%= radio_button_tag "answers[#{question.id}]", option_index, @submitted_answers.fetch(question.id.to_s, "") == option_index.to_s, required: true %>
+            <%= option %>
+          </label>
+        <% end %>
+      </fieldset>
+    <% end %>
     <%= form.submit "Submit answers", class: "rounded bg-indigo-700 px-5 py-3 font-bold text-white" %>
+  <% end %>
+  <% if @attempt&.passed? %>
+    <%= link_to "Return to mission roadmap", root_path, class: "mt-5 inline-block font-bold underline" %>
   <% end %>
 </section>
