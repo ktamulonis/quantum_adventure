@@ -6,7 +6,9 @@
   <% if @attempt %>
     <% if @attempt.passed? %>
       <section class="mt-5 rounded-xl border-2 border-amber-300 bg-amber-50 p-4" aria-label="Mission complete">
-        <p class="text-2xl text-amber-300" aria-hidden="true">★★★</p>
+        <p class="text-2xl text-amber-300" aria-label="<%= @attempt.question_count %> correct quiz answers">
+          <%= "★" * @attempt.question_count %>
+        </p>
         <h2 class="mt-1 text-xl font-black">Mission complete!</h2>
         <p class="mt-1">All <%= @attempt.question_count %> answers are correct. You earned <%= @mission.xp_reward %> XP and the <%= @mission.badge_name %> badge.</p>
       </section>
