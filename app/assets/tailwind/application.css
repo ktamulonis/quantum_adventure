@@ -1,1 +1,113 @@
 @import "tailwindcss";
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+html.dark :is(.bg-white, .bg-slate-50, .bg-slate-100, .bg-slate-200) {
+  background-color: #1e293b;
+}
+
+html.dark :is(.bg-amber-50, .bg-amber-100, .bg-amber-300) {
+  background-color: #422006;
+}
+
+html.dark :is(.bg-emerald-50, .bg-emerald-100) {
+  background-color: #134e4a;
+}
+
+html.dark :is(.bg-sky-50, .bg-sky-100, .bg-cyan-50) {
+  background-color: #0c4a6e;
+}
+
+html.dark :is(.bg-violet-50, .bg-violet-100) {
+  background-color: #3b0764;
+}
+
+html.dark :is(.bg-indigo-50, .bg-indigo-600, .bg-indigo-700, .bg-indigo-950) {
+  background-color: #312e81;
+}
+
+html.dark :is(.bg-rose-50, .bg-rose-100, .bg-rose-300, .bg-red-50) {
+  background-color: #4c0519;
+}
+
+html.dark :is(.bg-blue-500, .bg-blue-600, .bg-cyan-700, .bg-emerald-700, .bg-emerald-800) {
+  background-color: #075985;
+}
+
+html.dark :is(.text-slate-950, .text-slate-700, .text-slate-600, .text-gray-400, .text-gray-500) {
+  color: #f8fafc;
+}
+
+html.dark :is(.text-amber-800, .text-amber-100, .text-amber-300) {
+  color: #fde68a;
+}
+
+html.dark :is(.text-emerald-700, .text-emerald-800) {
+  color: #a7f3d0;
+}
+
+html.dark :is(.text-indigo-700, .text-indigo-800, .text-violet-800, .text-violet-900) {
+  color: #ddd6fe;
+}
+
+html.dark :is(.text-cyan-800, .text-cyan-900, .text-sky-800) {
+  color: #bae6fd;
+}
+
+html.dark :is(.text-rose-700, .text-rose-800, .text-red-500) {
+  color: #fecdd3;
+}
+
+html.dark :is(.border-slate-900, .border-slate-700, .border-slate-300, .border-gray-400) {
+  border-color: #94a3b8;
+}
+
+html.dark :is(.border-amber-300, .border-emerald-700, .border-emerald-800, .border-cyan-700, .border-indigo-500, .border-indigo-800, .border-rose-700, .border-rose-800, .border-violet-300, .border-violet-800) {
+  border-color: #cbd5e1;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #0f172a;
+  color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+html.dark .hover\:bg-white:hover {
+  background-color: #1e293b;
+}
+
+html.dark .hover\:text-emerald-800:hover {
+  color: #a7f3d0;
+}
+
+.theme-toggle {
+  transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+.theme-toggle:hover {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+html.dark .theme-toggle {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+html.dark .theme-toggle:hover {
+  background-color: #f8fafc;
+  color: #0f172a;
+}

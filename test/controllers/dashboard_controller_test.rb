@@ -14,6 +14,9 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     get root_path
 
     assert_response :success
+    assert_select "html.dark"
+    assert_select "body[data-controller='theme']"
+    assert_select "button[data-action='theme#toggle'][data-theme-target='toggle'][aria-label='Toggle dark mode'][aria-pressed='true']", "☀ Light mode"
     assert_select "h1", "Quantum Adventure"
     assert_select "p", /Ada/
   end
