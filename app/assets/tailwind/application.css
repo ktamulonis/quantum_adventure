@@ -14,7 +14,7 @@ html.dark :is(.bg-white, .bg-slate-50, .bg-slate-100, .bg-slate-200) {
 }
 
 html.dark :is(.bg-amber-50, .bg-amber-100, .bg-amber-300) {
-  background-color: #422006;
+  background-color: #1f2937;
 }
 
 html.dark :is(.bg-emerald-50, .bg-emerald-100) {

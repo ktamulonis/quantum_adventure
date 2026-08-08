@@ -7,10 +7,12 @@ export default class extends Controller {
     this.apply(this.savedTheme())
   }
 
-  toggle() {
-    const theme = this.dark? ? "light" : "dark"
+  toggle(event) {
+    event.preventDefault()
 
-    localStorage.setItem("quantum-adventure-theme", theme)
+    const theme = this.darkMode() ? "light" : "dark"
+
+    this.saveTheme(theme)
     this.apply(theme)
   }
 
@@ -22,11 +24,23 @@ export default class extends Controller {
     this.toggleTarget.textContent = dark ? "☀ Light mode" : "☾ Dark mode"
   }
 
-  dark?() {
+  darkMode() {
     return document.documentElement.classList.contains("dark")
   }
 
   savedTheme() {
-    return localStorage.getItem("quantum-adventure-theme") || "dark"
+    try {
+      return localStorage.getItem("quantum-adventure-theme") || "dark"
+    } catch (_error) {
+      return "dark"
+    }
+  }
+
+  saveTheme(theme) {
+    try {
+      localStorage.setItem("quantum-adventure-theme", theme)
+    } catch (_error) {
+      // The toggle remains usable when browser storage is unavailable.
+    }
   }
 }
