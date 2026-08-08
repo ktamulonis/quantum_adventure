@@ -30,11 +30,21 @@ class QbitTutor
       state. Its ideal computational-basis outcomes are 00 and 11, and its concurrence is 1.
       Explain correlated outcomes without claiming either person can signal faster than light.
     CONTEXT
-    "bell-test" => <<~CONTEXT
+    "bell-test" => <<~CONTEXT,
       Mission 4: Bell Test. The lesson runs four genuine circuit-based CHSH measurement
       settings. The classical limit is 2 and the quantum maximum is 2√2. Explain that a
       violation rules out local-hidden-variable models under the experiment assumptions;
       it does not enable faster-than-light messaging.
+    CONTEXT
+    "teleportation" => <<~CONTEXT
+      Mission 5: Quantum Teleportation. The learner follows a real three-qubit statevector
+      protocol. Qubit 0 is Alice's input state. Alice and Bob first make a Bell pair with
+      qubits 1 and 2. Alice applies CX from q0 to q1 and H to q0, then measures q0 and q1.
+      Those actual measurement bits are sent by an ordinary classical channel to Bob. Bob
+      applies X when Alice's q1 bit is 1 and Z when Alice's q0 bit is 1. His final qubit
+      matches the input up to global phase. Explain that no matter travels, the input is not
+      cloned, Alice's original state is consumed by measurement, and classical communication
+      prevents faster-than-light messaging.
     CONTEXT
   }.freeze
 

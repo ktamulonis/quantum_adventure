@@ -57,12 +57,12 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
   private
 
   def with_qbit_reply(reply)
-    singleton_class = QbitTutor.singleton_class
-    original_reply = singleton_class.instance_method(:reply)
-    singleton_class.define_method(:reply) { |**| reply }
+    qbit_singleton_class = QbitTutor.singleton_class
+    original_reply = qbit_singleton_class.instance_method(:reply)
+    qbit_singleton_class.define_method(:reply) { |**| reply }
     yield
   ensure
-    singleton_class.define_method(:reply, original_reply)
+    qbit_singleton_class&.define_method(:reply, original_reply) if original_reply
   end
 
   test "prevents direct access to a locked mission" do
@@ -124,5 +124,29 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", "Bell Test"
     assert_select "img[src='/images/mission-bell-test.png'][alt='Illustration of a Bell test between two measurement stations']"
+  end
+
+  test "renders the unlocked teleportation walkthrough with Q-Bit and the protocol stages" do
+    entanglement = create_playable_mission(3, "entanglement", 2)
+    bell_test = create_playable_mission(4, "bell-test", 3)
+    teleportation = create_playable_mission(5, "teleportation", 4)
+    [ @qubit, @superposition, entanglement, bell_test ].each_with_index do |mission, index|
+      MissionCompletion.create!(user: @user, mission: mission, xp_awarded: 100, completed_at: Time.current + index)
+    end
+
+    get mission_path(teleportation), params: { input: "plus", seed: 42, stage: "classical_bits_sent" }
+
+    assert_response :success
+    assert_select "h1", "Quantum Teleportation"
+    assert_select "[aria-label='Teleportation protocol visualizer']"
+    assert_select "p", /Classical channel/
+    assert_select "[data-controller=qbit-chat]"
+    assert_select "a[href*='stage=bob_corrects']", "Next step →"
+  end
+
+  def create_playable_mission(number, slug, prerequisite_number)
+    Mission.create!(number: number, slug: slug, title: slug.humanize, summary: slug,
+                    xp_reward: 100, badge_name: slug.humanize, prerequisite_number: prerequisite_number,
+                    status: "playable")
   end
 end

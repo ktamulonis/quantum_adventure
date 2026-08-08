@@ -12,7 +12,7 @@ missions = [
   [ 2, "superposition", "Superposition", "Create and inspect states such as |+⟩.", 150, "Superposition Master", 1, "playable" ],
   [ 3, "entanglement", "Entanglement", "Build Bell pairs and inspect their correlations.", 200, "Entangler", 2, "playable" ],
   [ 4, "bell-test", "Bell Test", "Run a CHSH Bell-inequality experiment.", 200, "Bell Winner", 3, "playable" ],
-  [ 5, "teleportation", "Quantum Teleportation", "Teleport an unknown qubit state.", 250, "Teleporter", 4, "coming_soon" ],
+  [ 5, "teleportation", "Quantum Teleportation", "Transfer a qubit state using entanglement and classical bits.", 250, "Teleporter", 4, "playable" ],
   [ 6, "interference", "Interference", "See how amplitudes add and cancel.", 150, "Interference Insider", 5, "coming_soon" ],
   [ 7, "grovers-search", "Grover’s Search", "Find a marked item with amplitude amplification.", 300, "Grover Guide", 6, "coming_soon" ],
   [ 8, "noise-hardware", "Noise & Real Hardware", "Compare ideal simulation with practical limitations.", 250, "Hardware Pioneer", 7, "coming_soon" ],
@@ -46,6 +46,11 @@ quizzes = {
     [ "What is the CHSH classical limit?", [ "1", "2", "2√2" ], 1, "Local hidden-variable models are bounded by 2." ],
     [ "What ideal value can quantum mechanics approach?", [ "0", "2", "2√2" ], 2, "The ideal quantum maximum is 2√2." ],
     [ "Do Bell correlations allow faster-than-light messaging?", [ "Yes", "No", "Only with hardware" ], 1, "Correlations cannot transmit chosen messages instantly." ]
+  ],
+  "teleportation" => [
+    [ "What is transferred in quantum teleportation?", [ "A physical particle", "A quantum state", "A faster-than-light message" ], 1, "Teleportation transfers quantum-state information, not matter." ],
+    [ "Why must Alice send two ordinary bits to Bob?", [ "Bob needs them to choose corrections", "They create entanglement", "They copy Alice’s qubit" ], 0, "Bob uses Alice’s measurement bits to select the required X and Z corrections." ],
+    [ "What happens to Alice’s original input state after her measurement?", [ "It remains as a second copy", "It is consumed by measurement", "It travels physically to Bob" ], 1, "Measurement consumes Alice’s independently available input state, so teleportation does not clone it." ]
   ]
 }
 

@@ -1,0 +1,98 @@
+<section class="w-full space-y-6">
+  <p class="font-bold uppercase text-indigo-700">Mission 5 · Learn → Experiment → Quiz → Earn</p>
+
+  <header class="grid items-center gap-5 rounded-2xl border-2 border-slate-900 bg-white p-5 md:grid-cols-[1fr_12rem]">
+    <div>
+      <h1 class="text-4xl font-black">Quantum Teleportation</h1>
+      <p class="mt-3 max-w-3xl text-lg">Teleportation transfers the <strong>state</strong> of Alice’s input qubit to Bob’s qubit. No particle travels, and Bob must wait for Alice’s two ordinary classical bits.</p>
+    </div>
+    <%= image_tag "/images/mission-teleportation.png", alt: "Illustration of quantum teleportation between Alice and Bob", class: "mx-auto h-48 w-48 object-contain" %>
+  </header>
+
+  <section class="rounded-2xl border-2 border-slate-900 bg-amber-50 p-5">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <p class="font-bold uppercase text-amber-800">Dr. Q’s mission briefing</p>
+        <p class="mt-1 max-w-3xl">We are not moving an object across space. We use entanglement plus two classical bits so Bob can reconstruct Alice’s original quantum state after Alice’s copy is consumed.</p>
+      </div>
+      <%= image_tag "/images/dr-q-welcome.png", alt: "Dr. Q introduces quantum teleportation", class: "h-28 w-28 object-contain object-top" %>
+    </div>
+  </section>
+
+  <section class="rounded-2xl border-2 border-slate-900 bg-white p-5">
+    <h2 class="text-xl font-black">Choose Alice’s input state</h2>
+    <p class="mt-1 text-slate-700">Each choice runs the same actual teleportation protocol with a deterministic teaching seed.</p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <% TeleportationLesson::INPUTS.each do |key, name| %>
+        <%= link_to "Teleport #{name}", mission_path(@mission, input: key, seed: params.fetch(:seed, 42), stage: "prepare_input"), class: "rounded border-2 border-slate-900 px-3 py-2 font-bold #{key == params.fetch(:input, 'plus') ? 'bg-amber-300' : 'bg-white'}" %>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="rounded-2xl border-2 border-slate-900 bg-sky-50 p-5" aria-label="Teleportation protocol visualizer">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <p class="font-bold uppercase text-sky-800">Protocol step <%= @lesson.stage_number + 1 %> of <%= @lesson.protocol.stages.length %></p>
+        <h2 class="text-2xl font-black"><%= @lesson.stage.title %></h2>
+      </div>
+      <div class="flex gap-2">
+        <% if @lesson.stage_number.positive? %>
+          <%= link_to "← Previous", mission_path(@mission, input: params.fetch(:input, 'plus'), seed: params.fetch(:seed, 42), stage: @lesson.protocol.stages[@lesson.stage_number - 1].key), class: "rounded bg-white px-3 py-2 font-bold" %>
+        <% end %>
+        <% if @lesson.stage_number < @lesson.protocol.stages.length - 1 %>
+          <%= link_to "Next step →", mission_path(@mission, input: params.fetch(:input, 'plus'), seed: params.fetch(:seed, 42), stage: @lesson.protocol.stages[@lesson.stage_number + 1].key), class: "rounded bg-indigo-700 px-3 py-2 font-bold text-white" %>
+        <% end %>
+      </div>
+    </div>
+
+    <p class="mt-3 max-w-4xl text-lg"><%= @lesson.stage.explanation %></p>
+
+    <div class="mt-5 grid gap-4 md:grid-cols-3">
+      <article class="rounded-xl border-2 border-indigo-800 bg-white p-4">
+        <p class="font-bold uppercase text-indigo-700">q0 · Alice’s input</p>
+        <h3 class="mt-1 text-xl font-black"><%= @lesson.input_name %></h3>
+        <p class="mt-2 text-sm"><%= @lesson.stage.alice_input_available ? 'Still part of the quantum protocol.' : 'Measured: the original state is no longer independently available here.' %></p>
+      </article>
+      <article class="rounded-xl border-2 border-cyan-700 bg-white p-4">
+        <p class="font-bold uppercase text-cyan-800">q1 · Alice’s Bell qubit</p>
+        <h3 class="mt-1 text-xl font-black"><%= @lesson.stage.alice_has_measured ? "Measured: #{@lesson.protocol.alice_measurement_bits.fetch(:alice)}" : 'Entanglement resource' %></h3>
+        <p class="mt-2 text-sm"><%= @lesson.stage.alice_has_measured ? 'Its bit helps Bob choose a correction.' : 'This becomes entangled with Bob’s qubit.' %></p>
+      </article>
+      <article class="rounded-xl border-2 border-rose-700 bg-white p-4">
+        <p class="font-bold uppercase text-rose-800">q2 · Bob’s qubit</p>
+        <% if @lesson.stage.bob_statevector %>
+          <h3 class="mt-1 text-xl font-black"><%= @lesson.stage.bob_has_corrected ? 'Recovered input state' : 'Waiting for correction' %></h3>
+          <p class="mt-2 text-sm">|0⟩ amplitude: <%= state_amplitude(@lesson.stage.bob_statevector, 0) %></p>
+          <p class="text-sm">|1⟩ amplitude: <%= state_amplitude(@lesson.stage.bob_statevector, 1) %></p>
+        <% else %>
+          <h3 class="mt-1 text-xl font-black">Part of Bell pair</h3>
+          <p class="mt-2 text-sm">Bob’s qubit has no separate pure state yet; it is entangled with Alice’s system.</p>
+        <% end %>
+      </article>
+    </div>
+
+    <div class="mt-5 rounded-xl border-2 border-dashed border-slate-700 bg-white p-4">
+      <p class="font-bold">Operations so far: <%= @lesson.stage.operations.map(&:upcase).join(' → ') %></p>
+      <% if @lesson.stage.alice_has_measured %>
+        <p class="mt-2">Alice measured q0 = <strong><%= @lesson.protocol.alice_measurement_bits.fetch(:input) %></strong> and q1 = <strong><%= @lesson.protocol.alice_measurement_bits.fetch(:alice) %></strong>.</p>
+      <% end %>
+      <% if @lesson.stage.classical_bits_sent %>
+        <p class="mt-2 font-bold text-indigo-800">Classical channel: [<%= @lesson.protocol.alice_measurement_bits.fetch(:input) %>, <%= @lesson.protocol.alice_measurement_bits.fetch(:alice) %>] travels from Alice to Bob.</p>
+      <% end %>
+      <% if @lesson.stage.bob_has_corrected %>
+        <p class="mt-2">Bob applied: <strong><%= @lesson.protocol.bob_corrections_applied.empty? ? 'no correction gates' : @lesson.protocol.bob_corrections_applied.map(&:upcase).join(' then ') %></strong>.</p>
+      <% end %>
+    </div>
+  </section>
+
+  <% if @lesson.stage.key == :complete %>
+    <section class="rounded-2xl border-2 border-emerald-800 bg-emerald-100 p-5" aria-label="Teleportation result">
+      <h2 class="text-2xl font-black">Bob recovered <%= @lesson.input_name %></h2>
+      <p class="mt-2">Fidelity: <strong><%= format('%.12f', @lesson.protocol.fidelity) %></strong> · <%= @lesson.protocol.successful? ? 'The simulator confirms the transferred state matches the input.' : 'The state did not match.' %></p>
+      <p class="mt-3">Teleportation does not clone a state, move matter, or send a controllable message faster than light. Alice’s measurements consumed the original state; Bob needed Alice’s classical bits before he could finish.</p>
+    </section>
+  <% end %>
+
+  <%= render "missions/qbit_tutor", mission: @mission %>
+  <%= link_to "Take the Quantum Teleportation quiz", quiz_mission_path(@mission), class: "inline-block rounded bg-indigo-700 px-5 py-3 font-bold text-white" %>
+</section>

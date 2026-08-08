@@ -21,6 +21,10 @@ class MissionsController < ApplicationController
     when "bell-test"
       @lesson = BellTestLesson.run(shots: mission_shots, seed: mission_seed)
       render :bell_test
+    when "teleportation"
+      @lesson = TeleportationLesson.run(input: params.fetch(:input, "plus"), seed: mission_seed,
+                                        stage: params.fetch(:stage, "prepare_input"))
+      render :teleportation
     else
       redirect_to missions_path, alert: "This mission is preparing for launch."
     end
