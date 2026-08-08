@@ -68,6 +68,9 @@ class QbitTutor
     CONTEXT,
     "noise-hardware" => <<~CONTEXT
       Mission 8: Noise & Real Hardware. The learner compares ideal QuantumRB statevector sampling with an explicit local, seeded Pauli X/Z error channel. The clean H-H circuit returns |0> with certainty. The bit-flip demonstration samples an X error after an identity step, so some |0> runs become |1>. The phase-flip demonstration samples Z between two H gates, making some runs end at |1> because the final H converts relative phase into a measurable result. Be clear that this is an educational error model, not IBM hardware, not a model of every real-device error, and not a live hardware result.
+    CONTEXT,
+    "error-correction" => <<~CONTEXT
+      Mission 9: Error Correction. The learner uses QuantumRB's real five-qubit statevector trace for a three-data-qubit repetition code plus two syndrome ancillas. The code encodes |0> as |000> and |1> as |111>; superpositions are joint codewords, not independent clones. The lesson injects at most one actual X error on q0, q1, or q2. Parity syndromes are 11 for q0, 10 for q1, 01 for q2, and 00 for no error. The syndrome selects a real X correction, restoring the input logical state with fidelity 1 in the ideal simulator. Explain carefully that the two ancillas reveal error parity, not the unknown logical value. This toy code corrects one bit flip only, not phase flips, multiple errors, or all real-hardware noise.
     CONTEXT
   }.freeze
 

@@ -16,7 +16,7 @@ missions = [
   [ 6, "interference", "Interference", "See how amplitudes add and cancel.", 150, "Interference Insider", 5, "playable" ],
   [ 7, "grovers-search", "Grover’s Search", "Find a marked item with amplitude amplification.", 300, "Grover Guide", 6, "playable" ],
   [ 8, "noise-hardware", "Noise & Real Hardware", "Compare ideal simulation with a local sampled error model.", 250, "Hardware Pioneer", 7, "playable" ],
-  [ 9, "error-correction", "Error Correction", "Learn the intuition behind protecting quantum information.", 250, "Error Corrector", 8, "coming_soon" ],
+  [ 9, "error-correction", "Error Correction", "Use redundancy and a syndrome to correct one bit flip.", 250, "Error Corrector", 8, "playable" ],
   [ 10, "shors-factoring", "Shor’s Factoring", "Understand period finding and factoring intuition.", 500, "Quantum Master", 9, "coming_soon" ]
 ]
 
@@ -66,6 +66,11 @@ quizzes = {
     [ "What does the ideal statevector result represent?", [ "A guarantee for every physical quantum device", "The clean mathematical reference", "A live hardware calibration" ], 1, "The ideal simulator is the clean mathematical reference used for comparison." ],
     [ "What can a sampled X error do to a stored |0⟩?", [ "Turn it into |1⟩", "Reveal a hidden answer", "Create entanglement by itself" ], 0, "X is a bit flip, so it can change a Z-basis 0 into 1." ],
     [ "Why can a phase-flip error matter even when it is not immediately visible?", [ "A later interference gate can convert phase into changed probabilities", "Phase is a classical message", "It makes hardware perfectly reliable" ], 0, "A later gate can recombine amplitude paths and make a relative phase difference measurable." ]
+  ],
+  "error-correction" => [
+    [ "What do the syndrome qubits reveal in this lesson?", [ "Which physical qubit flipped", "The unknown logical value", "A copied version of the input" ], 0, "The parity syndrome identifies the physical location of one bit flip without directly reading the logical state." ],
+    [ "Why does the three-qubit code use redundancy instead of making a simple copy?", [ "Unknown quantum states cannot be cloned independently", "Copies would use too few qubits", "It is only a visual preference" ], 0, "Quantum encoding creates a joint codeword; it does not make independent copies of an unknown state." ],
+    [ "Which error does this repetition-code lesson correct?", [ "One bit flip (X error)", "Every phase error", "Any number of errors" ], 0, "This small code corrects one X error. More complete codes are needed for phase errors and multiple errors." ]
   ]
 }
 

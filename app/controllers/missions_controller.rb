@@ -44,6 +44,12 @@ class MissionsController < ApplicationController
                                         shots: mission_shots, seed: mission_seed)
       unlock_mission_clue(params[:preset]) if params[:preset].present?
       render :noise_hardware
+    when "error-correction"
+      @lesson = ErrorCorrectionLesson.run(input: params.fetch(:input, "plus"),
+                                          error_qubit: params.fetch(:error_qubit, "1"),
+                                          seed: mission_seed)
+      unlock_mission_clue(params[:error_qubit]) if params[:error_qubit].present?
+      render :error_correction
     else
       redirect_to missions_path, alert: "This mission is preparing for launch."
     end

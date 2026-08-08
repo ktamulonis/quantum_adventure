@@ -172,6 +172,24 @@ class MissionLearningContent
         title: "A phase flip can spoil a later interference test",
         body: "Z changes relative phase. Between two H gates, that phase change is converted into a different final Z outcome. That is why keeping phase coherent matters for quantum algorithms."
       }
+    },
+    "error-correction" => {
+      "none" => {
+        title: "The no-error reference checks the codeword",
+        body: "With syndrome 00, the encoded state needs no physical correction. The redundancy has not measured the protected logical value."
+      },
+      "0" => {
+        title: "A syndrome locates an error without reading the message",
+        body: "The parity checks return 11 when q0 flips. They reveal which physical qubit disagrees with the other two, not whether the logical state was |0⟩ or |1⟩."
+      },
+      "1" => {
+        title: "Correction is a conditional physical gate",
+        body: "For syndrome 10, the protocol applies X to q1. The recovery is an actual statevector gate selected from the measured syndrome."
+      },
+      "2" => {
+        title: "This code has a clear limit",
+        body: "Syndrome 01 points to q2 for one bit flip. A phase flip or more than one error can fool this simple code, which is why real error correction needs richer codes."
+      }
     }
   }.freeze
 
