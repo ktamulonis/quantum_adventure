@@ -25,6 +25,8 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-controller='qbit-chat']"
     assert_select "img[src='/images/qbit.png'][alt*='Q-Bit']"
     assert_select "p", /Prepare \|0⟩ to reveal this explanation/
+    assert_select "turbo-frame#qubit-basics-experiment"
+    assert_select "a[data-turbo-frame='qubit-basics-experiment']", QubitBasicsLesson::PRESETS.length
   end
 
   test "unlocks a plain-language clue for each prepared qubit state" do
@@ -120,10 +122,14 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", "Entanglement"
     assert_select "img[src='/images/mission-entanglement.png'][alt='Illustration of two entangled qubits']"
+    assert_select "turbo-frame#entanglement-experiment"
+    assert_select "form[data-turbo-frame='entanglement-experiment']"
     get mission_path(bell_test), params: { shots: 500 }
     assert_response :success
     assert_select "h1", "Bell Test"
     assert_select "img[src='/images/mission-bell-test.png'][alt='Illustration of a Bell test between two measurement stations']"
+    assert_select "turbo-frame#bell-test-experiment"
+    assert_select "form[data-turbo-frame='bell-test-experiment']"
   end
 
   test "renders the unlocked teleportation walkthrough with Q-Bit and the protocol stages" do
@@ -141,6 +147,8 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[aria-label='Teleportation protocol visualizer']"
     assert_select "p", /Classical channel/
     assert_select "[data-controller=qbit-chat]"
+    assert_select "turbo-frame#teleportation-experiment"
+    assert_select "a[data-turbo-frame='teleportation-experiment']", TeleportationLesson::INPUTS.length + 2
     assert_select "a[href*='stage=bob_corrects']", "Next step →"
   end
 
