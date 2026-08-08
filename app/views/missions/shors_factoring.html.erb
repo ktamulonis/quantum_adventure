@@ -1,0 +1,85 @@
+<section class="w-full space-y-6">
+  <p class="font-bold uppercase text-indigo-700">Mission 10 · Learn → Experiment → Quiz → Earn</p>
+
+  <header class="grid items-center gap-5 rounded-2xl border-2 border-slate-900 bg-white p-5 md:grid-cols-[1fr_12rem]">
+    <div>
+      <h1 class="text-4xl font-black">Shor’s Factoring</h1>
+      <p class="mt-3 max-w-3xl text-lg">Factor 15 by finding a repeating rhythm in powers of 2. This is a tiny, honest period-finding demonstration—not useful large-scale factoring.</p>
+    </div>
+    <%= image_tag "/images/mission-shors-factoring.png", alt: "Illustration of Shor's period finding", class: "mx-auto h-48 w-48 object-contain" %>
+  </header>
+
+  <%= render "missions/history_story", mission: @mission %>
+
+  <section class="rounded-2xl border-2 border-slate-900 bg-amber-50 p-5">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <p class="font-bold uppercase text-amber-800">Dr. Q’s mission briefing</p>
+        <p class="mt-1 max-w-3xl">Factoring 15 sounds like ordinary arithmetic, but the quantum part looks for a repeating pattern: 2<sup>x</sup> mod 15. Think of a repeating song beat. The quantum circuit makes that rhythm interfere into measurable peaks; ordinary arithmetic turns the period into factors.</p>
+      </div>
+      <%= image_tag "/images/dr-q-welcome.png", alt: "Dr. Q explains Shor's factoring intuition", class: "h-28 w-28 object-contain object-top" %>
+    </div>
+  </section>
+
+  <%= turbo_frame_tag "shors-factoring-experiment" do %>
+    <section class="rounded-2xl border-2 border-slate-900 bg-white p-5" aria-label="Shor factoring simulator">
+      <h2 class="text-xl font-black">Find the period behind 15</h2>
+      <p class="mt-1 max-w-4xl">We always use the small example <strong>15</strong> with base <strong>2</strong>. The useful period is 4 because 2<sup>4</sup> mod 15 = 1. Each button performs a seeded, actual statevector measurement so you can see that a quantum sample may need a retry.</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <% ShorsFactoringLesson::SEEDS.each do |seed, label| %>
+          <%= link_to label, mission_path(@mission, seed: seed),
+                      data: { turbo_frame: "shors-factoring-experiment" },
+                      class: "rounded border-2 border-slate-900 px-3 py-2 font-bold #{seed.to_i == @lesson.seed ? 'bg-amber-300' : 'bg-white'}" %>
+        <% end %>
+      </div>
+
+      <section class="mt-5 rounded-xl border-2 border-indigo-800 bg-indigo-50 p-4">
+        <h3 class="text-xl font-black">The pattern we are asking about</h3>
+        <p class="mt-2">2<sup>0</sup> mod 15 = 1 · 2<sup>1</sup> mod 15 = 2 · 2<sup>2</sup> mod 15 = 4 · 2<sup>3</sup> mod 15 = 8 · 2<sup>4</sup> mod 15 = 1. The values repeat every four steps.</p>
+      </section>
+
+      <div class="mt-6 space-y-5">
+        <% @lesson.protocol.stages.each_with_index do |stage, index| %>
+          <% visible = stage.counting_probabilities.select { |_basis, probability| probability > 1e-10 } %>
+          <article class="rounded-xl border-2 border-slate-900 bg-white p-4" data-stage="<%= stage.key %>">
+            <p class="font-bold uppercase text-indigo-700">Stage <%= index + 1 %></p>
+            <h3 class="mt-1 text-2xl font-black"><%= stage.title %></h3>
+            <p class="mt-2 max-w-4xl"><%= stage.explanation %></p>
+            <p class="mt-3 text-sm"><strong>Quantum operations:</strong> <%= stage.operations.join(" → ") %></p>
+            <% if stage.measurement_outcome %>
+              <p class="mt-3 rounded bg-amber-100 p-3 font-bold">Measured counting sample: <%= stage.measurement_outcome %><%= stage.period ? " · inferred period: #{stage.period}" : "" %></p>
+            <% end %>
+            <div class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              <% visible.each do |basis, probability| %>
+                <% peak = stage.key == :inverse_qft && probability > 0.2 %>
+                <section class="rounded border-2 p-2 text-sm <%= peak ? 'border-emerald-700 bg-emerald-50' : 'border-slate-300 bg-slate-50' %>">
+                  <p class="font-black">|<%= basis %>⟩</p>
+                  <p>Probability: <strong><%= format('%.1f%%', probability * 100) %></strong></p>
+                  <div class="mt-1 h-3 rounded bg-slate-200"><div class="h-3 rounded bg-indigo-600" style="<%= probability_bar(probability) %>"></div></div>
+                  <% if peak %><p class="mt-1 font-bold text-emerald-800">period-related peak</p><% end %>
+                </section>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+
+      <section class="mt-6 rounded-xl border-2 border-emerald-800 bg-emerald-100 p-4" aria-label="Shor factoring result">
+        <h3 class="text-xl font-black">Classical finish: factors from the measured period</h3>
+        <p class="mt-2">Seeded samples tried: <strong><%= @lesson.attempts_label %></strong>. The useful sample is <strong><%= @lesson.protocol.measurement_outcome %></strong>, a phase clue of <strong><%= @lesson.measurement_fraction %></strong>.</p>
+        <p class="mt-2">The inferred period is <strong>r = <%= @lesson.protocol.period %></strong>. Since 2<sup>r/2</sup> = 4, ordinary gcd arithmetic gives <strong>gcd(4 − 1, 15) = 3</strong> and <strong>gcd(4 + 1, 15) = 5</strong>.</p>
+        <p class="mt-3 font-bold">15 = <%= @lesson.protocol.factors.join(" × ") %></p>
+        <p class="mt-3">The quantum circuit did not magically list factors or make every large number easy. It exposed a period for this tiny reversible function. Turning that into useful real-world factoring needs far larger, error-corrected hardware and carefully built modular-arithmetic circuits.</p>
+      </section>
+      <%= render "missions/discovery_clues", mission: @mission, unlocked_clues: @unlocked_mission_clues %>
+    </section>
+  <% end %>
+
+  <section class="rounded-2xl border-2 border-slate-900 bg-sky-50 p-5">
+    <h2 class="text-xl font-black">Why period finding helps</h2>
+    <p class="mt-2">A clock can hide a pattern in its repeated ticks. Shor’s idea is to use quantum interference to make a period show up as a handful of likely measurement outcomes. A normal computer then does the final number theory. The special power is the interference pattern—not a shortcut that automatically searches every database or cracks encryption on today’s toy example.</p>
+  </section>
+
+  <%= render "missions/qbit_tutor", mission: @mission %>
+  <%= link_to "Take the Shor’s Factoring quiz", quiz_mission_path(@mission), class: "inline-block rounded bg-indigo-700 px-5 py-3 font-bold text-white" %>
+</section>

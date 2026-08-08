@@ -50,6 +50,10 @@ class MissionsController < ApplicationController
                                           seed: mission_seed)
       unlock_mission_clue(params[:error_qubit]) if params[:error_qubit].present?
       render :error_correction
+    when "shors-factoring"
+      @lesson = ShorsFactoringLesson.run(seed: params.fetch(:seed, 42))
+      unlock_mission_clue(params[:seed]) if params[:seed].present?
+      render :shors_factoring
     else
       redirect_to missions_path, alert: "This mission is preparing for launch."
     end

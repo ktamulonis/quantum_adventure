@@ -71,6 +71,9 @@ class QbitTutor
     CONTEXT,
     "error-correction" => <<~CONTEXT
       Mission 9: Error Correction. The learner uses QuantumRB's real five-qubit statevector trace for a three-data-qubit repetition code plus two syndrome ancillas. The code encodes |0> as |000> and |1> as |111>; superpositions are joint codewords, not independent clones. The lesson injects at most one actual X error on q0, q1, or q2. Parity syndromes are 11 for q0, 10 for q1, 01 for q2, and 00 for no error. The syndrome selects a real X correction, restoring the input logical state with fidelity 1 in the ideal simulator. Explain carefully that the two ancillas reveal error parity, not the unknown logical value. This toy code corrects one bit flip only, not phase flips, multiple errors, or all real-hardware noise.
+    CONTEXT,
+    "shors-factoring" => <<~CONTEXT
+      Mission 10: Shor's Factoring. This is a deliberately tiny, honest QuantumRB period-finding example that factors 15 with base 2. Four counting qubits enter equal superposition; a controlled modular-multiplication permutation writes 2^x mod 15 into a four-qubit work register. An inverse QFT creates counting-register peaks at 0000, 0100, 1000, and 1100, which correspond to the period 4. A genuine seeded measurement may first produce the unhelpful 0000 sample, so the protocol can retry. Classical gcd arithmetic then turns r = 4 into 3 and 5. Explain that Shor's algorithm finds period information rather than reading factors directly, this lesson is not useful large-number factoring, and real practical factoring would require much larger fault-tolerant hardware and modular arithmetic circuits. Do not claim that arbitrary databases become searchable or that this app breaks encryption.
     CONTEXT
   }.freeze
 

@@ -92,7 +92,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "img[src='/images/mission-superposition.png'][alt*='plus superposition']"
     assert_select "turbo-frame#superposition-experiment"
     assert_select "a[data-turbo-frame='superposition-experiment']", SuperpositionLesson::PRESETS.length
-    assert_select "[aria-label='History of this mission']", /Superposition comes from the wave rule/
+    assert_select "[aria-label='History of this mission']", /From ripples to quantum possibilities/
 
     get mission_path(@superposition), params: { preset: "plus" }
     assert_select "[data-clue-key='plus'] h3", "H prepares an X-basis state"
@@ -137,14 +137,14 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "img[src='/images/mission-entanglement.png'][alt='Illustration of two entangled qubits']"
     assert_select "turbo-frame#entanglement-experiment"
     assert_select "form[data-turbo-frame='entanglement-experiment']"
-    assert_select "[aria-label='History of this mission']", /Entanglement was named in a 1935 argument/
+    assert_select "[aria-label='History of this mission']", /1935: a puzzle with two distant quantum partners/
     get mission_path(bell_test), params: { shots: 500 }
     assert_response :success
     assert_select "h1", "Bell Test"
     assert_select "img[src='/images/mission-bell-test.png'][alt='Illustration of a Bell test between two measurement stations']"
     assert_select "turbo-frame#bell-test-experiment"
     assert_select "form[data-turbo-frame='bell-test-experiment']"
-    assert_select "[aria-label='History of this mission']", /Bell turned a philosophical dispute into a test/
+    assert_select "[aria-label='History of this mission']", /1964: John Bell turns an argument into a scoreboard/
   end
 
   test "renders the unlocked teleportation walkthrough with Q-Bit and the protocol stages" do
@@ -165,7 +165,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "turbo-frame#teleportation-experiment"
     assert_select "a[data-turbo-frame='teleportation-experiment']", TeleportationLesson::INPUTS.length + 2
     assert_select "a[href*='stage=bob_corrects']", "Next step →"
-    assert_select "[aria-label='History of this mission']", /Teleportation was proposed as state transfer/
+    assert_select "[aria-label='History of this mission']", /1993: science fiction becomes a state-transfer recipe/
   end
 
   test "renders the unlocked interference simulator with Turbo controls and state snapshots" do
@@ -187,7 +187,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[data-turbo-frame='interference-experiment']", InterferenceLesson::PRESETS.length
     assert_select "p", /cancel at \|0⟩/
     assert_select "[data-controller=qbit-chat]"
-    assert_select "[aria-label='History of this mission']", /Quantum computing borrows a lesson from waves/
+    assert_select "[aria-label='History of this mission']", /1801: a screen of stripes hints at a future computer trick/
     assert_select "[data-clue-key='cancel_zero'] h3", "A phase flip redirects the outcome"
   end
 
@@ -212,7 +212,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-stage='oracle']", /phase oracle/
     assert_select "[aria-label='Grover measurement result']", /\|10⟩/
     assert_select "[data-controller=qbit-chat]"
-    assert_select "[aria-label='History of this mission']", /Lov Grover found a search rule based on phase/
+    assert_select "[aria-label='History of this mission']", /1996: Lov Grover teaches a search to whisper, then amplify/
     assert_select "[data-clue-key='10'] h3", "Diffusion turns phase into probability"
   end
 
@@ -262,6 +262,33 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-stage='extract_syndrome']", /Measured syndrome: 01/
     assert_select "[aria-label='Error correction result']", /Fidelity with the original logical input/
     assert_select "[data-clue-key='2'] h3", "This code has a clear limit"
+    assert_select "[data-controller=qbit-chat]"
+  end
+
+  test "renders unlocked Shor factoring with Turbo sample controls" do
+    entanglement = create_playable_mission(3, "entanglement", 2)
+    bell_test = create_playable_mission(4, "bell-test", 3)
+    teleportation = create_playable_mission(5, "teleportation", 4)
+    interference = create_playable_mission(6, "interference", 5)
+    grovers_search = create_playable_mission(7, "grovers-search", 6)
+    noise_hardware = create_playable_mission(8, "noise-hardware", 7)
+    error_correction = create_playable_mission(9, "error-correction", 8)
+    shors_factoring = create_playable_mission(10, "shors-factoring", 9)
+    [ @qubit, @superposition, entanglement, bell_test, teleportation, interference, grovers_search,
+      noise_hardware, error_correction ].each_with_index do |mission, index|
+      MissionCompletion.create!(user: @user, mission: mission, xp_awarded: 100, completed_at: Time.current + index)
+    end
+
+    get mission_path(shors_factoring), params: { seed: 42 }
+
+    assert_response :success
+    assert_select "h1", "Shor’s Factoring"
+    assert_select "turbo-frame#shors-factoring-experiment"
+    assert_select "[aria-label='Shor factoring simulator']"
+    assert_select "a[data-turbo-frame='shors-factoring-experiment']", 3
+    assert_select "[data-stage='inverse_qft']", /period-related peak/
+    assert_select "[aria-label='Shor factoring result']", /15 = 3 × 5/
+    assert_select "[data-clue-key='42'] h3", "A measurement can be a clue, not the final answer"
     assert_select "[data-controller=qbit-chat]"
   end
 

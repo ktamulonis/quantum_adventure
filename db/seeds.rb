@@ -17,7 +17,7 @@ missions = [
   [ 7, "grovers-search", "Grover’s Search", "Find a marked item with amplitude amplification.", 300, "Grover Guide", 6, "playable" ],
   [ 8, "noise-hardware", "Noise & Real Hardware", "Compare ideal simulation with a local sampled error model.", 250, "Hardware Pioneer", 7, "playable" ],
   [ 9, "error-correction", "Error Correction", "Use redundancy and a syndrome to correct one bit flip.", 250, "Error Corrector", 8, "playable" ],
-  [ 10, "shors-factoring", "Shor’s Factoring", "Understand period finding and factoring intuition.", 500, "Quantum Master", 9, "coming_soon" ]
+  [ 10, "shors-factoring", "Shor’s Factoring", "Use quantum period finding to factor the tiny example 15 = 3 × 5.", 500, "Quantum Master", 9, "playable" ]
 ]
 
 missions.each do |number, slug, title, summary, xp_reward, badge_name, prerequisite_number, status|
@@ -71,6 +71,11 @@ quizzes = {
     [ "What do the syndrome qubits reveal in this lesson?", [ "Which physical qubit flipped", "The unknown logical value", "A copied version of the input" ], 0, "The parity syndrome identifies the physical location of one bit flip without directly reading the logical state." ],
     [ "Why does the three-qubit code use redundancy instead of making a simple copy?", [ "Unknown quantum states cannot be cloned independently", "Copies would use too few qubits", "It is only a visual preference" ], 0, "Quantum encoding creates a joint codeword; it does not make independent copies of an unknown state." ],
     [ "Which error does this repetition-code lesson correct?", [ "One bit flip (X error)", "Every phase error", "Any number of errors" ], 0, "This small code corrects one X error. More complete codes are needed for phase errors and multiple errors." ]
+  ],
+  "shors-factoring" => [
+    [ "What does the quantum part of this small Shor lesson reveal?", [ "A period in a modular arithmetic pattern", "The factors directly", "Every possible divisor at once" ], 0, "The quantum period-finding routine produces information about a repeating modular pattern. Classical arithmetic uses that period to find factors." ],
+    [ "What period does 2^x mod 15 have in this lesson?", [ "2", "4", "15" ], 1, "The sequence 1, 2, 4, 8 returns to 1 after four steps, so the period is 4." ],
+    [ "Why does this demonstration not factor useful real-world cryptographic keys?", [ "It only uses a tiny educational example and ideal simulator", "Quantum algorithms cannot use interference", "Factors are never related to periods" ], 0, "Factoring 15 is a teaching case. Useful factoring would require much larger fault-tolerant quantum hardware and modular arithmetic circuits." ]
   ]
 }
 
