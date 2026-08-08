@@ -1,0 +1,20 @@
+<% clues = MissionLearningContent.clues_for(mission.slug) %>
+<section class="mt-6 rounded-xl border-2 border-slate-900 bg-amber-50 p-5" aria-label="Discovery clues">
+  <h2 class="text-xl font-black">Discovery clues</h2>
+  <p class="mt-1 text-slate-700">Each simulator interaction reveals one clue. These explain the ideas needed for the mission quiz.</p>
+  <div class="mt-4 grid gap-3 md:grid-cols-3">
+    <% clues.each do |key, clue| %>
+      <% unlocked = unlocked_clues.include?(key) %>
+      <article data-clue-key="<%= key %>" class="rounded border-2 border-slate-900 p-4 <%= unlocked ? 'bg-white' : 'bg-slate-200 text-slate-600' %>">
+        <% if unlocked %>
+          <p class="text-sm font-bold uppercase text-emerald-700">Clue unlocked</p>
+          <h3 class="mt-1 font-black"><%= clue.fetch(:title) %></h3>
+          <p class="mt-2 text-sm"><%= clue.fetch(:body) %></p>
+        <% else %>
+          <p class="font-bold">Locked clue</p>
+          <p class="mt-2 text-sm">Try another experiment control to reveal this explanation.</p>
+        <% end %>
+      </article>
+    <% end %>
+  </div>
+</section>

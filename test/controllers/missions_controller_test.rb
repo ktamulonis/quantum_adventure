@@ -24,17 +24,26 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h3", "Measure in Z"
     assert_select "[data-controller='qbit-chat']"
     assert_select "img[src='/images/qbit.png'][alt*='Q-Bit']"
-    assert_select "p", /Prepare \|0⟩ to reveal this explanation/
+    assert_select "[data-clue-key='zero'] p", "Locked clue"
     assert_select "turbo-frame#qubit-basics-experiment"
     assert_select "a[data-turbo-frame='qubit-basics-experiment']", QubitBasicsLesson::PRESETS.length
   end
 
-  test "unlocks a plain-language clue for each prepared qubit state" do
+  test "unlocks Qubit Basics clues one prepared state at a time" do
+    get mission_path(@qubit), params: { preset: "zero" }
+
+    assert_response :success
+    assert_select "[data-clue-key='zero'] h3", "A measurement has probabilities, not hidden answers"
+    assert_select "[data-clue-key='one'] p", "Locked clue"
+    assert_select "[data-clue-key='plus'] p", "Locked clue"
+
     get mission_path(@qubit), params: { preset: "one" }
 
     assert_response :success
+    assert_select "[data-clue-key='zero'] h3", "A measurement has probabilities, not hidden answers"
     assert_select "h3", "The X gate is the quantum bit flip"
     assert_select "p", /Z measurement returns 1 with certainty/
+    assert_select "[data-clue-key='plus'] p", "Locked clue"
 
     get mission_path(@qubit), params: { preset: "plus" }
 
@@ -83,6 +92,10 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "img[src='/images/mission-superposition.png'][alt*='plus superposition']"
     assert_select "turbo-frame#superposition-experiment"
     assert_select "a[data-turbo-frame='superposition-experiment']", SuperpositionLesson::PRESETS.length
+    assert_select "[aria-label='History of this mission']", /Superposition comes from the wave rule/
+
+    get mission_path(@superposition), params: { preset: "plus" }
+    assert_select "[data-clue-key='plus'] h3", "H prepares an X-basis state"
   end
 
   test "shows per-question stars and requires every correct answer to unlock the next mission" do
@@ -124,12 +137,14 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "img[src='/images/mission-entanglement.png'][alt='Illustration of two entangled qubits']"
     assert_select "turbo-frame#entanglement-experiment"
     assert_select "form[data-turbo-frame='entanglement-experiment']"
+    assert_select "[aria-label='History of this mission']", /Entanglement was named in a 1935 argument/
     get mission_path(bell_test), params: { shots: 500 }
     assert_response :success
     assert_select "h1", "Bell Test"
     assert_select "img[src='/images/mission-bell-test.png'][alt='Illustration of a Bell test between two measurement stations']"
     assert_select "turbo-frame#bell-test-experiment"
     assert_select "form[data-turbo-frame='bell-test-experiment']"
+    assert_select "[aria-label='History of this mission']", /Bell turned a philosophical dispute into a test/
   end
 
   test "renders the unlocked teleportation walkthrough with Q-Bit and the protocol stages" do
@@ -150,6 +165,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "turbo-frame#teleportation-experiment"
     assert_select "a[data-turbo-frame='teleportation-experiment']", TeleportationLesson::INPUTS.length + 2
     assert_select "a[href*='stage=bob_corrects']", "Next step →"
+    assert_select "[aria-label='History of this mission']", /Teleportation was proposed as state transfer/
   end
 
   test "renders the unlocked interference simulator with Turbo controls and state snapshots" do
@@ -171,6 +187,8 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[data-turbo-frame='interference-experiment']", InterferenceLesson::PRESETS.length
     assert_select "p", /cancel at \|0⟩/
     assert_select "[data-controller=qbit-chat]"
+    assert_select "[aria-label='History of this mission']", /Quantum computing borrows a lesson from waves/
+    assert_select "[data-clue-key='cancel_zero'] h3", "A phase flip redirects the outcome"
   end
 
   test "renders the unlocked Grover search experiment with Turbo marked-state controls" do
@@ -194,6 +212,8 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-stage='oracle']", /phase oracle/
     assert_select "[aria-label='Grover measurement result']", /\|10⟩/
     assert_select "[data-controller=qbit-chat]"
+    assert_select "[aria-label='History of this mission']", /Lov Grover found a search rule based on phase/
+    assert_select "[data-clue-key='10'] h3", "Diffusion turns phase into probability"
   end
 
   def create_playable_mission(number, slug, prerequisite_number)

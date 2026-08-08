@@ -7,6 +7,7 @@
     </div>
     <%= image_tag "/images/mission-entanglement.png", alt: "Illustration of two entangled qubits", class: "mx-auto h-48 w-48 object-contain" %>
   </header>
+  <%= render "missions/history_story", mission: @mission %>
   <%= turbo_frame_tag "entanglement-experiment" do %>
     <%= form_with url: mission_path(@mission), method: :get, data: { turbo_frame: "entanglement-experiment" }, class: "flex flex-wrap gap-3" do |form| %>
       <%= form.number_field :shots, value: params.fetch(:shots, 500), min: 100, max: 10_000, class: "rounded border-2 border-slate-900 p-2" %>
@@ -14,6 +15,15 @@
     <% end %>
     <section class="mt-6 rounded-xl border-2 border-slate-900 bg-white p-5"><h2 class="text-2xl font-black">Phi-plus Bell pair</h2><pre class="mt-3 rounded bg-slate-100 p-3"><%= @lesson.circuit.draw %></pre><p class="mt-3">Concurrence: <strong><%= format('%.3f', @lesson.statevector.concurrence) %></strong> · Entangled: <strong><%= @lesson.statevector.entangled? ? 'Yes' : 'No' %></strong></p><div class="mt-4 grid gap-3 md:grid-cols-4"><% @lesson.statevector.probabilities.each do |basis, probability| %><div class="rounded border p-3"><p class="font-bold">|<%= basis %>⟩</p><p><%= format('%.1f%%', probability * 100) %></p></div><% end %></div></section>
     <section class="mt-6 rounded-xl border-2 border-slate-900 bg-sky-50 p-5"><h2 class="text-xl font-black">Measured correlations</h2><% @lesson.measurement.counts.sort.each do |basis, count| %><p class="mt-2"><%= basis %>: <%= count %> / <%= @lesson.measurement.shots %></p><% end %><p class="mt-3">The ideal Bell pair yields only 00 and 11 here.</p></section>
+    <section class="mt-6 rounded-xl border-2 border-slate-900 bg-indigo-50 p-4">
+      <p class="font-bold">Choose an observation lens</p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <% { "bell_pair" => "Inspect the Bell pair", "concurrence" => "Inspect concurrence", "no_signal" => "Ask about signalling" }.each do |focus, label| %>
+          <%= link_to label, mission_path(@mission, shots: params.fetch(:shots, 500), seed: params.fetch(:seed, 42), focus: focus), data: { turbo_frame: "entanglement-experiment" }, class: "rounded border-2 border-slate-900 bg-white px-3 py-2 font-bold" %>
+        <% end %>
+      </div>
+    </section>
+    <%= render "missions/discovery_clues", mission: @mission, unlocked_clues: @unlocked_mission_clues %>
   <% end %>
   <%= render "missions/qbit_tutor", mission: @mission %>
   <%= link_to "Take the Entanglement quiz", quiz_mission_path(@mission), class: "inline-block rounded bg-indigo-700 px-5 py-3 font-bold text-white" %>
