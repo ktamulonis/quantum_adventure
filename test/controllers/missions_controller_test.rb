@@ -27,6 +27,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-clue-key='zero'] p", "Locked clue"
     assert_select "turbo-frame#qubit-basics-experiment"
     assert_select "a[data-turbo-frame='qubit-basics-experiment']", QubitBasicsLesson::PRESETS.length
+    assert_select "[aria-label='Learn more resources'] a[href='https://en.wikipedia.org/wiki/Benjamin_Schumacher'][target='_blank'][rel='noopener noreferrer']"
   end
 
   test "unlocks Qubit Basics clues one prepared state at a time" do
@@ -50,6 +51,7 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h3", "A qubit can be predictable in one basis and random in another"
     assert_select "p", /not a classical coin flip/
+    assert_select "[data-clue-key='plus'] a[target='_blank'][rel='noopener noreferrer']", "Measurement in quantum mechanics on Wikipedia ↗"
   end
 
   test "returns a Q-Bit answer for the current mission as JSON" do

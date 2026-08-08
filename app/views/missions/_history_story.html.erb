@@ -4,4 +4,14 @@
   <h2 class="mt-1 text-2xl font-black"><%= story.fetch(:heading) %></h2>
   <p class="mt-2 max-w-4xl"><%= story.fetch(:body) %></p>
   <p class="mt-3 rounded bg-white p-3 text-sm"><strong>Why the name?</strong> <%= story.fetch(:named_for) %></p>
+  <% if story.fetch(:resources, []).any? %>
+    <div class="mt-4" aria-label="Learn more resources">
+      <p class="text-sm font-bold uppercase tracking-wide text-violet-800">Learn more</p>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <% story.fetch(:resources).each do |resource| %>
+          <%= link_to "#{resource.fetch(:label)} ↗", resource.fetch(:url), target: "_blank", rel: "noopener noreferrer", class: "rounded border-2 border-violet-800 bg-white px-3 py-2 text-sm font-bold text-violet-900 underline hover:bg-violet-100" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 </section>

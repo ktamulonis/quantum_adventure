@@ -10,6 +10,14 @@
           <p class="text-sm font-bold uppercase text-emerald-700">Clue unlocked</p>
           <h3 class="mt-1 font-black"><%= clue.fetch(:title) %></h3>
           <p class="mt-2 text-sm"><%= clue.fetch(:body) %></p>
+          <% if clue.fetch(:resources, []).any? %>
+            <p class="mt-3 text-sm">
+              <span class="font-bold">Explore:</span>
+              <% clue.fetch(:resources).each do |resource| %>
+                <%= link_to "#{resource.fetch(:label)} ↗", resource.fetch(:url), target: "_blank", rel: "noopener noreferrer", class: "font-bold text-sky-800 underline" %>
+              <% end %>
+            </p>
+          <% end %>
         <% else %>
           <p class="font-bold">Locked clue</p>
           <p class="mt-2 text-sm">Try another experiment control to reveal this explanation.</p>
