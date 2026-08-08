@@ -173,6 +173,29 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-controller=qbit-chat]"
   end
 
+  test "renders the unlocked Grover search experiment with Turbo marked-state controls" do
+    entanglement = create_playable_mission(3, "entanglement", 2)
+    bell_test = create_playable_mission(4, "bell-test", 3)
+    teleportation = create_playable_mission(5, "teleportation", 4)
+    interference = create_playable_mission(6, "interference", 5)
+    grovers_search = create_playable_mission(7, "grovers-search", 6)
+    [ @qubit, @superposition, entanglement, bell_test, teleportation, interference ].each_with_index do |mission, index|
+      MissionCompletion.create!(user: @user, mission: mission, xp_awarded: 100, completed_at: Time.current + index)
+    end
+
+    get mission_path(grovers_search), params: { marked_state: "10", seed: 42 }
+
+    assert_response :success
+    assert_select "h1", "Grover’s Search"
+    assert_select "img[src='/images/mission-grovers-search.png'][alt*='marked item']"
+    assert_select "turbo-frame#grovers-search-experiment"
+    assert_select "[aria-label='Grover search simulator']"
+    assert_select "a[data-turbo-frame='grovers-search-experiment']", GroversSearchLesson::MARKED_STATES.length
+    assert_select "[data-stage='oracle']", /phase oracle/
+    assert_select "[aria-label='Grover measurement result']", /\|10⟩/
+    assert_select "[data-controller=qbit-chat]"
+  end
+
   def create_playable_mission(number, slug, prerequisite_number)
     Mission.create!(number: number, slug: slug, title: slug.humanize, summary: slug,
                     xp_reward: 100, badge_name: slug.humanize, prerequisite_number: prerequisite_number,

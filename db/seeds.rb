@@ -14,7 +14,7 @@ missions = [
   [ 4, "bell-test", "Bell Test", "Run a CHSH Bell-inequality experiment.", 200, "Bell Winner", 3, "playable" ],
   [ 5, "teleportation", "Quantum Teleportation", "Transfer a qubit state using entanglement and classical bits.", 250, "Teleporter", 4, "playable" ],
   [ 6, "interference", "Interference", "See how amplitudes add and cancel.", 150, "Interference Insider", 5, "playable" ],
-  [ 7, "grovers-search", "Grover’s Search", "Find a marked item with amplitude amplification.", 300, "Grover Guide", 6, "coming_soon" ],
+  [ 7, "grovers-search", "Grover’s Search", "Find a marked item with amplitude amplification.", 300, "Grover Guide", 6, "playable" ],
   [ 8, "noise-hardware", "Noise & Real Hardware", "Compare ideal simulation with practical limitations.", 250, "Hardware Pioneer", 7, "coming_soon" ],
   [ 9, "error-correction", "Error Correction", "Learn the intuition behind protecting quantum information.", 250, "Error Corrector", 8, "coming_soon" ],
   [ 10, "shors-factoring", "Shor’s Factoring", "Understand period finding and factoring intuition.", 500, "Quantum Master", 9, "coming_soon" ]
@@ -56,6 +56,11 @@ quizzes = {
     [ "Which gate can recombine two amplitude paths?", [ "X", "Z", "H" ], 2, "Hadamard can split and recombine amplitudes." ],
     [ "Starting from |0⟩, what does H then Z then H produce?", [ "|0⟩ with certainty", "|1⟩ with certainty", "A 50/50 mixture" ], 1, "Z changes a relative phase, so the final H makes the paths cancel at |0⟩ and reinforce at |1⟩." ],
     [ "Why can H then Z still look 50/50 in a Z measurement?", [ "Relative phase changes later interference, not immediate Z probabilities", "Z deletes the |1⟩ amplitude", "The qubit becomes a classical coin" ], 0, "The relative phase is not visible in an immediate Z measurement, but a later H can reveal it through interference." ]
+  ],
+  "grovers-search" => [
+    [ "What does Grover’s oracle do to the marked state?", [ "It reveals the answer directly", "It flips the marked state’s phase", "It measures every candidate" ], 1, "The oracle changes phase; it does not announce the marked answer." ],
+    [ "Which step converts the phase mark into a higher measurement probability?", [ "Diffusion (amplitude amplification)", "A classical message", "Reset" ], 0, "The diffusion step recombines amplitudes so the marked state reinforces." ],
+    [ "How many Grover iterations are needed in this ideal four-item lesson?", [ "One", "Four", "None" ], 0, "With one marked item among four, one ideal Grover iteration amplifies the target to certainty." ]
   ]
 }
 

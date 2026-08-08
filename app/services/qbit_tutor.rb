@@ -46,7 +46,7 @@ class QbitTutor
       cloned, Alice's original state is consumed by measurement, and classical communication
       prevents faster-than-light messaging.
     CONTEXT
-    "interference" => <<~CONTEXT
+    "interference" => <<~CONTEXT,
       Mission 6: Interference. The learner can run three one-qubit QuantumRB circuits with
       exact state snapshots: H then H reinforces |0>; H then Z then H uses a relative phase
       to cancel |0> and reinforce |1>; H then Z is |->, which remains 50/50 in an immediate
@@ -54,6 +54,17 @@ class QbitTutor
       combine before probabilities are measured. A final H can make a relative phase visible.
       This is the basic constructive/destructive interference idea behind quantum algorithms;
       it is not a guarantee of a correct answer or a faster-than-light effect.
+    CONTEXT
+    "grovers-search" => <<~CONTEXT
+      Mission 7: Grover's Search. This is the smallest exact example: two qubits encode
+      four candidates (00, 01, 10, 11), and the learner chooses one marked state. H on both
+      qubits creates equal amplitudes. The oracle uses X gates around CZ as necessary to
+      flip only the marked state's phase; it does not reveal the answer. The diffusion
+      sequence H-H-X-X-CZ-X-X-H-H converts that phase marking into constructive interference
+      on the target and destructive interference on the other three states. In this ideal
+      four-item case, one Grover iteration gives the marked outcome with certainty. Explain
+      that useful speedup is meaningful for larger unstructured spaces only when a quantum
+      oracle for the condition can be implemented; arbitrary databases are not automatically searchable.
     CONTEXT
   }.freeze
 

@@ -1,0 +1,80 @@
+<section class="w-full space-y-6">
+  <p class="font-bold uppercase text-indigo-700">Mission 7 · Learn → Experiment → Quiz → Earn</p>
+
+  <header class="grid items-center gap-5 rounded-2xl border-2 border-slate-900 bg-white p-5 md:grid-cols-[1fr_12rem]">
+    <div>
+      <h1 class="text-4xl font-black">Grover’s Search</h1>
+      <p class="mt-3 max-w-3xl text-lg">Grover’s algorithm uses phase and interference to amplify a marked answer. This lesson searches exactly four candidates with one genuine Grover iteration.</p>
+    </div>
+    <%= image_tag "/images/mission-grovers-search.png", alt: "Illustration of a marked item in Grover's quantum search", class: "mx-auto h-48 w-48 object-contain" %>
+  </header>
+
+  <section class="rounded-2xl border-2 border-slate-900 bg-amber-50 p-5">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <p class="font-bold uppercase text-amber-800">Dr. Q’s mission briefing</p>
+        <p class="mt-1 max-w-3xl">The oracle does not announce the answer. It quietly changes one state’s phase. A diffusion step lets that hidden phase affect interference, making the marked answer measurable.</p>
+      </div>
+      <%= image_tag "/images/dr-q-welcome.png", alt: "Dr. Q explains Grover's search", class: "h-28 w-28 object-contain object-top" %>
+    </div>
+  </section>
+
+  <%= turbo_frame_tag "grovers-search-experiment" do %>
+    <section class="rounded-2xl border-2 border-slate-900 bg-white p-5" aria-label="Grover search simulator">
+      <h2 class="text-xl font-black">Choose the marked item</h2>
+      <p class="mt-1 text-slate-700">The circuit will phase-mark one of four candidates, then use diffusion to make it the certain result in this ideal, four-item example.</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <% GroversSearchLesson::MARKED_STATES.each do |state| %>
+          <%= link_to "Mark |#{state}⟩", mission_path(@mission, marked_state: state),
+                      data: { turbo_frame: "grovers-search-experiment" },
+                      class: "rounded border-2 border-slate-900 px-3 py-2 font-bold #{state == @lesson.marked_state ? 'bg-amber-300' : 'bg-white'}" %>
+        <% end %>
+      </div>
+
+      <section class="mt-5 rounded-xl border-2 border-indigo-800 bg-indigo-50 p-4">
+        <h3 class="text-2xl font-black">The actual two-qubit circuit</h3>
+        <p class="mt-2">Target: <strong>|<%= @lesson.marked_state %>⟩</strong> · H creates the candidate superposition; the oracle flips a phase; diffusion amplifies the marked amplitude.</p>
+        <pre class="mt-4 overflow-x-auto rounded bg-white p-3"><%= @lesson.circuit.draw %></pre>
+      </section>
+
+      <div class="mt-6 space-y-5">
+        <% @lesson.stages.each do |stage| %>
+          <article class="rounded-xl border-2 border-slate-900 bg-white p-4" data-stage="<%= stage.key %>">
+            <p class="font-bold uppercase text-indigo-700">Stage <%= @lesson.stages.index(stage) + 1 %></p>
+            <h3 class="mt-1 text-2xl font-black"><%= stage.title %></h3>
+            <p class="mt-2 max-w-4xl"><%= stage.explanation %></p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <% stage.statevector.amplitudes.each_with_index do |amplitude, index| %>
+                <% basis = stage.statevector.basis(index) %>
+                <% marked = basis == @lesson.marked_state %>
+                <% zero_amplitude = amplitude.abs < 1e-10 %>
+                <% negative_phase = amplitude.real < -1e-10 && amplitude.imag.abs < 1e-10 %>
+                <section class="rounded-lg border-2 p-3 <%= marked && stage.key == :oracle ? 'border-rose-700 bg-rose-50' : marked && stage.key == :diffusion ? 'border-emerald-700 bg-emerald-50' : 'border-slate-300 bg-slate-50' %>">
+                  <p class="font-black">|<%= basis %>⟩ <%= marked ? '← marked item' : '' %></p>
+                  <p class="mt-2 text-sm">Amplitude: <strong><%= state_amplitude(stage.statevector, index) %></strong></p>
+                  <p class="text-sm <%= negative_phase ? 'font-bold text-rose-700' : '' %>">Phase: <%= zero_amplitude ? 'no amplitude (canceled)' : negative_phase ? 'opposite (−)' : 'same (+)' %></p>
+                  <p class="mt-2 text-sm">Probability: <strong><%= format('%.1f%%', stage.probabilities.fetch(basis) * 100) %></strong></p>
+                  <div class="mt-1 h-3 rounded bg-slate-200"><div class="h-3 rounded bg-indigo-600" style="<%= probability_bar(stage.probabilities.fetch(basis)) %>"></div></div>
+                </section>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+
+      <section class="mt-6 rounded-xl border-2 border-emerald-800 bg-emerald-100 p-4" aria-label="Grover measurement result">
+        <h3 class="text-xl font-black">Measured output</h3>
+        <p class="mt-2">The local statevector simulator measured <strong>|<%= @lesson.marked_state %>⟩</strong> <%= @lesson.measurement.count(@lesson.marked_state) %> out of <%= @lesson.measurement.shots %> times.</p>
+        <p class="mt-3">For four items, one iteration is enough. Larger unstructured search spaces are where Grover’s quadratic speedup becomes meaningful—but only when a quantum oracle for the search condition can actually be built. It does not automatically make arbitrary databases quantum-searchable.</p>
+      </section>
+    </section>
+  <% end %>
+
+  <section class="rounded-2xl border-2 border-slate-900 bg-sky-50 p-5">
+    <h2 class="text-xl font-black">Why this works</h2>
+    <p class="mt-2">Grover does not check every answer and reveal the right one. The oracle changes only the marked state’s phase, which is invisible in its immediate probability. Diffusion converts that phase difference into constructive interference for the marked state and destructive interference for the others.</p>
+  </section>
+
+  <%= render "missions/qbit_tutor", mission: @mission %>
+  <%= link_to "Take the Grover’s Search quiz", quiz_mission_path(@mission), class: "inline-block rounded bg-indigo-700 px-5 py-3 font-bold text-white" %>
+</section>

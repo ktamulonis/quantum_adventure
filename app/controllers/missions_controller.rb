@@ -28,6 +28,9 @@ class MissionsController < ApplicationController
     when "interference"
       @lesson = InterferenceLesson.run(preset: params.fetch(:preset, "reinforce_zero"))
       render :interference
+    when "grovers-search"
+      @lesson = GroversSearchLesson.run(marked_state: params.fetch(:marked_state, "00"), seed: mission_seed)
+      render :grovers_search
     else
       redirect_to missions_path, alert: "This mission is preparing for launch."
     end
@@ -82,7 +85,9 @@ class MissionsController < ApplicationController
   end
 
   def mission_seed
-    Integer(params.fetch(:seed, 42))
+    return Integer(params[:seed]) if params[:seed].present?
+
+    Random.new_seed
   end
 
   def unlock_qubit_clue
