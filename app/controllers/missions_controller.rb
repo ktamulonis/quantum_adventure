@@ -63,7 +63,8 @@ class MissionsController < ApplicationController
 
   def quiz
     @questions = @mission.quiz_questions.order(:id)
-    @submitted_answers = {}
+    @attempt = latest_quiz_attempt
+    @submitted_answers = @attempt&.answers || {}
   end
 
   def submit_quiz
@@ -98,6 +99,10 @@ class MissionsController < ApplicationController
 
   def quiz_answers
     params.fetch(:answers, {}).permit!.to_h
+  end
+
+  def latest_quiz_attempt
+    Current.user.quiz_attempts.where(mission: @mission).order(created_at: :desc, id: :desc).first
   end
 
   def mission_shots

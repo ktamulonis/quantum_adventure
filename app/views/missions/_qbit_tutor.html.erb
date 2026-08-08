@@ -1,4 +1,5 @@
-<section class="rounded-2xl border-2 border-slate-900 bg-cyan-50 p-5" data-controller="qbit-chat" data-qbit-chat-url-value="<%= qbit_chat_mission_path(mission) %>">
+<% suggested_question = params[:qbit_question].to_s %>
+<section id="qbit-tutor" class="rounded-2xl border-2 border-slate-900 bg-cyan-50 p-5" data-controller="qbit-chat" data-qbit-chat-url-value="<%= qbit_chat_mission_path(mission) %>">
   <div class="flex items-center gap-4">
     <%= image_tag "/images/qbit.png", alt: "Q-Bit, the Quantum Adventure learning robot", class: "h-24 w-24 rounded-full border-2 border-slate-900 bg-slate-950 object-cover object-top" %>
     <div>
@@ -14,8 +15,11 @@
 
   <form class="mt-4 flex flex-col gap-2 sm:flex-row" data-action="submit->qbit-chat#ask">
     <label class="sr-only" for="qbit-question">Ask Q-Bit a question</label>
-    <input id="qbit-question" type="text" maxlength="1000" placeholder="What happens when I prepare |+⟩?" class="min-w-0 flex-1 rounded border-2 border-slate-700 p-3" data-qbit-chat-target="question">
+    <input id="qbit-question" type="text" maxlength="1000" value="<%= suggested_question %>" placeholder="What happens when I prepare |+⟩?" class="min-w-0 flex-1 rounded border-2 border-slate-700 p-3" data-qbit-chat-target="question">
     <button type="submit" class="rounded bg-cyan-700 px-4 py-3 font-bold text-white disabled:opacity-50" data-qbit-chat-target="submit">Ask Q-Bit</button>
   </form>
+  <% if suggested_question.present? %>
+    <p class="mt-2 text-sm text-cyan-900">Q-Bit has a suggested question ready. Edit it if you like, then ask for a walkthrough.</p>
+  <% end %>
   <p class="mt-2 text-sm text-rose-800" data-qbit-chat-target="status" aria-live="polite"></p>
 </section>

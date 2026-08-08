@@ -16,7 +16,7 @@
     <h2 class="text-2xl font-black uppercase">Mission roadmap</h2>
     <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
       <% @missions.each do |mission| %>
-        <% completed = Current.user.completed?(mission); unlocked = mission.unlocked_for?(Current.user) %>
+        <% completed = Current.user.completed?(mission); unlocked = mission.unlocked_for?(Current.user); attempt = @latest_quiz_attempts[mission.id] %>
         <article id="mission-<%= mission.slug %>" class="rounded-xl border-2 border-slate-900 p-4 <%= completed ? 'bg-emerald-100' : unlocked && mission.status == 'playable' ? 'bg-amber-100' : 'bg-slate-200 opacity-70' %>">
           <% if mission.slug == "qubit-basics" %>
             <div class="mb-3 flex h-40 w-full items-center justify-center overflow-hidden">
@@ -65,6 +65,13 @@
             <p class="mt-1 text-xl tracking-wide text-amber-300" aria-label="Three correct quiz answers">★★★</p>
           <% elsif unlocked && mission.status == 'playable' %>
             <p class="mt-3 text-sm font-bold">Ready</p>
+            <% if attempt %>
+              <p class="mt-1 text-xl tracking-wide" aria-label="<%= attempt.correct_count %> correct out of <%= attempt.question_count %> quiz answers">
+                <% attempt.question_count.times do |index| %><span class="<%= index < attempt.correct_count ? 'text-amber-300' : 'text-slate-400' %>"><%= index < attempt.correct_count ? '★' : '☆' %></span><% end %>
+              </p>
+              <p class="text-xs font-bold text-slate-700">Quiz progress: <%= attempt.correct_count %>/<%= attempt.question_count %></p>
+              <%= link_to "Continue quiz", quiz_mission_path(mission), class: "mt-2 inline-block underline" %>
+            <% end %>
             <%= link_to "Start", mission_path(mission.slug), class: "mt-3 inline-block underline" %>
           <% else %>
             <p class="mt-3 text-sm font-bold"><%= mission.status == 'playable' ? 'Locked' : 'Locked / coming soon' %></p>

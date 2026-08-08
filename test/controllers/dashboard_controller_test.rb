@@ -31,6 +31,21 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_select "p[aria-label='Three correct quiz answers']", "★★★"
   end
 
+  test "shows the latest partial quiz stars and a continue link" do
+    user = User.create!(display_name: "Ada", email_address: "ada@example.test", password: "password123")
+    mission = Mission.create!(number: 1, slug: "qubit-basics", title: "Qubit Basics", summary: "Learn qubits",
+                              xp_reward: 100, badge_name: "Qubit Explorer", status: "playable")
+    QuizAttempt.create!(user: user, mission: mission, answers: { "1" => "0" }, correct_count: 2,
+                        question_count: 3, passed: false)
+    sign_in_as(user)
+
+    get root_path
+
+    assert_response :success
+    assert_select "#mission-qubit-basics p[aria-label='2 correct out of 3 quiz answers']", "★★☆"
+    assert_select "#mission-qubit-basics a[href='/missions/qubit-basics/quiz']", "Continue quiz"
+  end
+
   test "launches Mission 6 in the roadmap after Mission 5 completion" do
     user = User.create!(display_name: "Ada", email_address: "ada@example.test", password: "password123")
     teleportation = Mission.create!(number: 5, slug: "teleportation", title: "Quantum Teleportation",

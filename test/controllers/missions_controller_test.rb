@@ -122,6 +122,38 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert @superposition.unlocked_for?(@user)
   end
 
+  test "keeps quiz answers, feedback, and Q-Bit guidance available across retries" do
+    answers = @qubit.quiz_questions.each_with_index.to_h do |question, index|
+      [ question.id.to_s, index.zero? ? "1" : "0" ]
+    end
+
+    3.times { post submit_quiz_mission_path(@qubit), params: { answers: answers } }
+
+    assert_equal 3, @user.quiz_attempts.where(mission: @qubit).count
+    assert_response :unprocessable_content
+    assert_select "form[data-turbo='false']"
+    assert_select "[aria-label='Guidance for question 1']", /Dr. Q’s clue/
+    assert_select "a[href*='qbit_question=']", "Ask Q-Bit to explain this answer"
+    assert_select "a[href='/missions/qubit-basics']", "← Back to the Qubit Basics lesson"
+
+    get quiz_mission_path(@qubit)
+
+    assert_response :success
+    first_question = @qubit.quiz_questions.order(:id).first
+    assert_select "input[name='answers[#{first_question.id}]'][value='1'][checked='checked']"
+    assert_select "[aria-label='Guidance for question 1']", /Because/
+  end
+
+  test "prefills Q-Bit with a quiz follow-up question on the lesson page" do
+    question = "Explain why my selected quiz answer is not right."
+
+    get mission_path(@qubit), params: { qbit_question: question }
+
+    assert_response :success
+    assert_select "#qbit-tutor input[value='#{question}']"
+    assert_select "#qbit-tutor p", /suggested question ready/
+  end
+
   test "renders unlocked entanglement and Bell test experiments" do
     entanglement = Mission.create!(number: 3, slug: "entanglement", title: "Entanglement", summary: "Bell pairs",
                                    xp_reward: 200, badge_name: "Entangler", prerequisite_number: 2, status: "playable")
