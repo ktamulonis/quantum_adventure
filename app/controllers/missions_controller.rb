@@ -25,6 +25,9 @@ class MissionsController < ApplicationController
       @lesson = TeleportationLesson.run(input: params.fetch(:input, "plus"), seed: mission_seed,
                                         stage: params.fetch(:stage, "prepare_input"))
       render :teleportation
+    when "interference"
+      @lesson = InterferenceLesson.run(preset: params.fetch(:preset, "reinforce_zero"))
+      render :interference
     else
       redirect_to missions_path, alert: "This mission is preparing for launch."
     end

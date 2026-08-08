@@ -36,7 +36,7 @@ class QbitTutor
       violation rules out local-hidden-variable models under the experiment assumptions;
       it does not enable faster-than-light messaging.
     CONTEXT
-    "teleportation" => <<~CONTEXT
+    "teleportation" => <<~CONTEXT,
       Mission 5: Quantum Teleportation. The learner follows a real three-qubit statevector
       protocol. Qubit 0 is Alice's input state. Alice and Bob first make a Bell pair with
       qubits 1 and 2. Alice applies CX from q0 to q1 and H to q0, then measures q0 and q1.
@@ -45,6 +45,15 @@ class QbitTutor
       matches the input up to global phase. Explain that no matter travels, the input is not
       cloned, Alice's original state is consumed by measurement, and classical communication
       prevents faster-than-light messaging.
+    CONTEXT
+    "interference" => <<~CONTEXT
+      Mission 6: Interference. The learner can run three one-qubit QuantumRB circuits with
+      exact state snapshots: H then H reinforces |0>; H then Z then H uses a relative phase
+      to cancel |0> and reinforce |1>; H then Z is |->, which remains 50/50 in an immediate
+      Z measurement even though the |1> amplitude has a minus sign. Explain that amplitudes
+      combine before probabilities are measured. A final H can make a relative phase visible.
+      This is the basic constructive/destructive interference idea behind quantum algorithms;
+      it is not a guarantee of a correct answer or a faster-than-light effect.
     CONTEXT
   }.freeze
 
