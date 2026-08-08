@@ -158,6 +158,20 @@ class MissionLearningContent
         title: "The speedup needs a usable oracle",
         body: "For larger search spaces Grover can reduce oracle calls quadratically, but someone must still build a quantum oracle that recognizes a solution."
       }
+    },
+    "noise-hardware" => {
+      "clean" => {
+        title: "A simulator starts with an ideal reference",
+        body: "The clean statevector run preserves every amplitude exactly, so H then H returns |0⟩ in every shot. It shows the mathematical target—not a guarantee that a physical device behaves perfectly."
+      },
+      "bit_flip" => {
+        title: "A bit flip changes a measurement value",
+        body: "The sampled X channel sometimes turns |0⟩ into |1⟩. Each shot samples independently, so the observed fraction is close to, not necessarily exactly, the configured chance."
+      },
+      "phase_flip" => {
+        title: "A phase flip can spoil a later interference test",
+        body: "Z changes relative phase. Between two H gates, that phase change is converted into a different final Z outcome. That is why keeping phase coherent matters for quantum algorithms."
+      }
     }
   }.freeze
 

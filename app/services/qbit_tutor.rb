@@ -65,6 +65,9 @@ class QbitTutor
       four-item case, one Grover iteration gives the marked outcome with certainty. Explain
       that useful speedup is meaningful for larger unstructured spaces only when a quantum
       oracle for the condition can be implemented; arbitrary databases are not automatically searchable.
+    CONTEXT,
+    "noise-hardware" => <<~CONTEXT
+      Mission 8: Noise & Real Hardware. The learner compares ideal QuantumRB statevector sampling with an explicit local, seeded Pauli X/Z error channel. The clean H-H circuit returns |0> with certainty. The bit-flip demonstration samples an X error after an identity step, so some |0> runs become |1>. The phase-flip demonstration samples Z between two H gates, making some runs end at |1> because the final H converts relative phase into a measurable result. Be clear that this is an educational error model, not IBM hardware, not a model of every real-device error, and not a live hardware result.
     CONTEXT
   }.freeze
 

@@ -15,7 +15,7 @@ missions = [
   [ 5, "teleportation", "Quantum Teleportation", "Transfer a qubit state using entanglement and classical bits.", 250, "Teleporter", 4, "playable" ],
   [ 6, "interference", "Interference", "See how amplitudes add and cancel.", 150, "Interference Insider", 5, "playable" ],
   [ 7, "grovers-search", "Grover’s Search", "Find a marked item with amplitude amplification.", 300, "Grover Guide", 6, "playable" ],
-  [ 8, "noise-hardware", "Noise & Real Hardware", "Compare ideal simulation with practical limitations.", 250, "Hardware Pioneer", 7, "coming_soon" ],
+  [ 8, "noise-hardware", "Noise & Real Hardware", "Compare ideal simulation with a local sampled error model.", 250, "Hardware Pioneer", 7, "playable" ],
   [ 9, "error-correction", "Error Correction", "Learn the intuition behind protecting quantum information.", 250, "Error Corrector", 8, "coming_soon" ],
   [ 10, "shors-factoring", "Shor’s Factoring", "Understand period finding and factoring intuition.", 500, "Quantum Master", 9, "coming_soon" ]
 ]
@@ -61,6 +61,11 @@ quizzes = {
     [ "What does Grover’s oracle do to the marked state?", [ "It reveals the answer directly", "It flips the marked state’s phase", "It measures every candidate" ], 1, "The oracle changes phase; it does not announce the marked answer." ],
     [ "Which step converts the phase mark into a higher measurement probability?", [ "Diffusion (amplitude amplification)", "A classical message", "Reset" ], 0, "The diffusion step recombines amplitudes so the marked state reinforces." ],
     [ "How many Grover iterations are needed in this ideal four-item lesson?", [ "One", "Four", "None" ], 0, "With one marked item among four, one ideal Grover iteration amplifies the target to certainty." ]
+  ],
+  "noise-hardware" => [
+    [ "What does the ideal statevector result represent?", [ "A guarantee for every physical quantum device", "The clean mathematical reference", "A live hardware calibration" ], 1, "The ideal simulator is the clean mathematical reference used for comparison." ],
+    [ "What can a sampled X error do to a stored |0⟩?", [ "Turn it into |1⟩", "Reveal a hidden answer", "Create entanglement by itself" ], 0, "X is a bit flip, so it can change a Z-basis 0 into 1." ],
+    [ "Why can a phase-flip error matter even when it is not immediately visible?", [ "A later interference gate can convert phase into changed probabilities", "Phase is a classical message", "It makes hardware perfectly reliable" ], 0, "A later gate can recombine amplitude paths and make a relative phase difference measurable." ]
   ]
 }
 

@@ -1,0 +1,86 @@
+<section class="w-full space-y-6">
+  <p class="font-bold uppercase text-indigo-700">Mission 8 · Learn → Experiment → Quiz → Earn</p>
+
+  <header class="grid items-center gap-5 rounded-2xl border-2 border-slate-900 bg-white p-5 md:grid-cols-[1fr_12rem]">
+    <div>
+      <h1 class="text-4xl font-black">Noise &amp; Real Hardware</h1>
+      <p class="mt-3 max-w-3xl text-lg">An ideal simulator preserves every amplitude. Physical quantum hardware has to preserve delicate states while errors and environmental interactions try to change them.</p>
+    </div>
+    <%= image_tag "/images/mission-noise-hardware.png", alt: "Illustration comparing ideal simulation with noisy hardware", class: "mx-auto h-48 w-48 object-contain" %>
+  </header>
+
+  <%= render "missions/history_story", mission: @mission %>
+
+  <section class="rounded-2xl border-2 border-slate-900 bg-amber-50 p-5">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <p class="font-bold uppercase text-amber-800">Dr. Q’s mission briefing</p>
+        <p class="mt-1 max-w-3xl">We will compare an ideal QuantumRB statevector run with a clearly labeled local error channel. This is a teaching model—not a live run on IBM hardware and not a prediction for any particular device.</p>
+      </div>
+      <%= image_tag "/images/dr-q-welcome.png", alt: "Dr. Q explains quantum noise", class: "h-28 w-28 object-contain object-top" %>
+    </div>
+  </section>
+
+  <%= turbo_frame_tag "noise-hardware-experiment" do %>
+    <section class="rounded-2xl border-2 border-slate-900 bg-white p-5" aria-label="Noise and hardware simulator">
+      <h2 class="text-xl font-black">Choose an error-channel demonstration</h2>
+      <p class="mt-1 text-slate-700">Every count below comes from QuantumRB sampling a circuit. The noisy side inserts sampled X or Z errors at the stated point; Rails does not invent the result percentages.</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <% NoiseHardwareLesson::PRESETS.each do |key, configuration| %>
+          <%= link_to configuration.fetch(:title), mission_path(@mission, preset: key),
+                      data: { turbo_frame: "noise-hardware-experiment" },
+                      class: "rounded border-2 border-slate-900 px-3 py-2 font-bold #{key == @lesson.preset ? 'bg-amber-300' : 'bg-white'}" %>
+        <% end %>
+      </div>
+
+      <section class="mt-5 rounded-xl border-2 border-indigo-800 bg-indigo-50 p-4">
+        <h3 class="text-2xl font-black"><%= @lesson.title %></h3>
+        <p class="mt-2 max-w-4xl"><%= @lesson.briefing %></p>
+        <pre class="mt-4 overflow-x-auto rounded bg-white p-3"><%= @lesson.circuit.draw %></pre>
+      </section>
+
+      <div class="mt-6 grid gap-4 lg:grid-cols-3">
+        <% @lesson.steps.each do |step| %>
+          <article class="rounded-xl border-2 border-slate-900 bg-slate-50 p-4">
+            <p class="font-bold uppercase text-indigo-700">Ideal step <%= step.number %></p>
+            <h3 class="mt-1 text-lg font-black"><%= step.label %></h3>
+            <p class="mt-3 text-sm">|0⟩ amplitude: <strong><%= state_amplitude(step.statevector, 0) %></strong></p>
+            <p class="text-sm">|1⟩ amplitude: <strong><%= state_amplitude(step.statevector, 1) %></strong></p>
+          </article>
+        <% end %>
+        <article class="rounded-xl border-2 border-rose-800 bg-rose-50 p-4">
+          <p class="font-bold uppercase text-rose-800">Local noise channel</p>
+          <h3 class="mt-1 text-lg font-black">After ideal instruction <%= @lesson.comparison.noise_after_instruction %></h3>
+          <p class="mt-3"><%= @lesson.channel_label %></p>
+          <p class="mt-3 text-sm"><strong><%= @lesson.comparison.disturbed_shots %></strong> of <%= @lesson.comparison.noisy_result.shots %> noisy shots sampled at least one error (<%= format('%.1f%%', @lesson.error_rate * 100) %>).</p>
+        </article>
+      </div>
+
+      <div class="mt-6 grid gap-5 lg:grid-cols-2" aria-label="Ideal and noisy measurement comparison">
+        <% [["Ideal statevector", @lesson.comparison.ideal_result, "emerald"], ["Sampled local noise", @lesson.comparison.noisy_result, "rose"]].each do |title, result, color| %>
+          <article class="rounded-xl border-2 border-slate-900 bg-white p-4">
+            <p class="font-bold uppercase text-<%= color %>-700"><%= title %></p>
+            <p class="mt-1 text-sm">Backend: <strong><%= result.backend_name %></strong> · <%= result.shots %> shots</p>
+            <% %w[0 1].each do |outcome| %>
+              <% probability = result.probability(outcome) %>
+              <div class="mt-4">
+                <div class="flex justify-between text-sm"><span>|<%= outcome %>⟩</span><strong><%= result.count(outcome) %> · <%= format('%.1f%%', probability * 100) %></strong></div>
+                <div class="mt-1 h-4 rounded bg-slate-200"><div class="h-4 rounded bg-<%= color %>-600" style="<%= probability_bar(probability) %>"></div></div>
+              </div>
+            <% end %>
+          </article>
+        <% end %>
+      </div>
+
+      <section class="mt-6 rounded-xl border-2 border-emerald-800 bg-emerald-100 p-4">
+        <h3 class="text-xl font-black">What this reveals</h3>
+        <p class="mt-2"><%= @lesson.insight %></p>
+        <p class="mt-3">Real systems also have decoherence, calibration drift, readout errors, and other effects. This small X/Z channel is intentionally narrower: it helps you see why preserving a quantum state is an engineering problem.</p>
+      </section>
+      <%= render "missions/discovery_clues", mission: @mission, unlocked_clues: @unlocked_mission_clues %>
+    </section>
+  <% end %>
+
+  <%= render "missions/qbit_tutor", mission: @mission %>
+  <%= link_to "Take the Noise & Real Hardware quiz", quiz_mission_path(@mission), class: "inline-block rounded bg-indigo-700 px-5 py-3 font-bold text-white" %>
+</section>

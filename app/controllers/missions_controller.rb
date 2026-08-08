@@ -39,6 +39,11 @@ class MissionsController < ApplicationController
       @lesson = GroversSearchLesson.run(marked_state: params.fetch(:marked_state, "00"), seed: mission_seed)
       unlock_mission_clue(params[:marked_state]) if params[:marked_state].present?
       render :grovers_search
+    when "noise-hardware"
+      @lesson = NoiseHardwareLesson.run(preset: params.fetch(:preset, "phase_flip"),
+                                        shots: mission_shots, seed: mission_seed)
+      unlock_mission_clue(params[:preset]) if params[:preset].present?
+      render :noise_hardware
     else
       redirect_to missions_path, alert: "This mission is preparing for launch."
     end

@@ -216,6 +216,30 @@ class MissionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-clue-key='10'] h3", "Diffusion turns phase into probability"
   end
 
+  test "renders the unlocked noise and hardware comparison with Turbo controls" do
+    entanglement = create_playable_mission(3, "entanglement", 2)
+    bell_test = create_playable_mission(4, "bell-test", 3)
+    teleportation = create_playable_mission(5, "teleportation", 4)
+    interference = create_playable_mission(6, "interference", 5)
+    grovers_search = create_playable_mission(7, "grovers-search", 6)
+    noise_hardware = create_playable_mission(8, "noise-hardware", 7)
+    [ @qubit, @superposition, entanglement, bell_test, teleportation, interference, grovers_search ].each_with_index do |mission, index|
+      MissionCompletion.create!(user: @user, mission: mission, xp_awarded: 100, completed_at: Time.current + index)
+    end
+
+    get mission_path(noise_hardware), params: { preset: "phase_flip", seed: 42 }
+
+    assert_response :success
+    assert_select "h1", "Noise & Real Hardware"
+    assert_select "turbo-frame#noise-hardware-experiment"
+    assert_select "[aria-label='Noise and hardware simulator']"
+    assert_select "a[data-turbo-frame='noise-hardware-experiment']", NoiseHardwareLesson::PRESETS.length
+    assert_select "[aria-label='Ideal and noisy measurement comparison']"
+    assert_select "p", /small X\/Z channel is intentionally narrower/
+    assert_select "[data-clue-key='phase_flip'] h3", "A phase flip can spoil a later interference test"
+    assert_select "[data-controller=qbit-chat]"
+  end
+
   def create_playable_mission(number, slug, prerequisite_number)
     Mission.create!(number: number, slug: slug, title: slug.humanize, summary: slug,
                     xp_reward: 100, badge_name: slug.humanize, prerequisite_number: prerequisite_number,
