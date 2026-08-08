@@ -70,7 +70,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     get root_path
     assert_select "#mission-interference" do
       assert_select "p", "Ready"
-      assert_select "a[href='/missions/interference']", "Start"
+      assert_select "a[href='/missions/interference'][class*='rounded-full'][class*='bg-emerald-700'][class*='hover:bg-white'][class*='active:scale-95']", "Start mission"
     end
 
     MissionCompletion.create!(user: user, mission: interference, xp_awarded: 150, completed_at: Time.current)

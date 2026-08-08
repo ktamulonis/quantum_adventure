@@ -46,7 +46,7 @@ class MissionLearningContent
       body: "Teleporters belonged to science-fiction doors—step in here, appear there. In 1993, Charles Bennett and five colleagues showed a subtler quantum version: shared entanglement plus two ordinary classical bits can transfer a quantum state. No person, atom, or magical signal zips across space; the original state is consumed and rebuilt on Bob’s qubit.",
       named_for: "The protocol is called teleportation because the state is reconstructed elsewhere, not because a particle is transported.",
       resources: [
-        { label: "Charles H. Bennett on Wikipedia", url: "https://en.wikipedia.org/wiki/Charles_H._Bennett" },
+        { label: "Charles H. Bennett on Wikipedia", url: "https://en.wikipedia.org/wiki/Charles_H._Bennett_(physicist)" },
         { label: "Quantum teleportation on Wikipedia", url: "https://en.wikipedia.org/wiki/Quantum_teleportation" }
       ]
     },
